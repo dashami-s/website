@@ -54,6 +54,7 @@ function updateBatchSize() {
 function handleScroll() {
     // Check if user is near bottom of page (within 300px)
     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 300) {
+        // Only load if NOT currently loading AND there are items left
         if (!isLoading && loadedCount < currentFilteredProducts.length) {
             renderNextBatch();
         }
@@ -62,26 +63,37 @@ function handleScroll() {
 
 function renderNextBatch() {
     isLoading = true;
-    const grid = document.getElementById('product-grid');
+    const loader = document.getElementById('infinite-loader');
     
-    // Calculate slice
-    const start = loadedCount;
-    const end = Math.min(start + batchSize, currentFilteredProducts.length);
-    const batch = currentFilteredProducts.slice(start, end);
+    // 1. Show Loader
+    if(loader) loader.classList.remove('d-none');
 
-    batch.forEach(p => {
-        const card = createProductCard(p);
-        grid.appendChild(card);
-    });
+    // 2. Small delay to make the loading feel natural (and visible)
+    setTimeout(() => {
+        const grid = document.getElementById('product-grid');
+        
+        // Calculate slice
+        const start = loadedCount;
+        const end = Math.min(start + batchSize, currentFilteredProducts.length);
+        const batch = currentFilteredProducts.slice(start, end);
 
-    loadedCount = end;
-    isLoading = false;
+        batch.forEach(p => {
+            const card = createProductCard(p); // Uses your helper function
+            grid.appendChild(card);
+        });
 
-    // Update Counter Text
-    const countLabel = document.getElementById('resultCount');
-    if (countLabel) {
-        countLabel.textContent = `Showing ${loadedCount} of ${currentFilteredProducts.length} products`;
-    }
+        loadedCount = end;
+        isLoading = false;
+
+        // 3. Hide Loader
+        if(loader) loader.classList.add('d-none');
+
+        // Update Counter Text
+        const countLabel = document.getElementById('resultCount');
+        if (countLabel) {
+            countLabel.textContent = `Showing ${loadedCount} of ${currentFilteredProducts.length} products`;
+        }
+    }, 800); // 800ms delay for smooth UX
 }
 
 // --- CORE FUNCTIONS ---

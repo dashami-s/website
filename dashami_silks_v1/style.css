@@ -141,3 +141,48 @@ footer { background: var(--primary); width: 100%; margin-top: auto; border-top: 
         font-size: 0.75rem;
     }
 }
+
+/* --- PRODUCT PAGE MOBILE FIXES --- */
+@media (max-width: 768px) {
+    
+    /* 1. Reduce Gallery Height */
+    .pd-main-stage {
+        height: 350px; /* Smaller height for phones */
+        background: #fff; /* Clean white bg */
+    }
+
+    /* 2. Resize Fonts */
+    #pd-title {
+        font-size: 1.8rem; /* Smaller Title */
+        line-height: 1.2;
+    }
+    #pd-price {
+        font-size: 1.8rem !important; /* Smaller Price */
+    }
+    
+    /* 3. Adjust Layout Spacing */
+    #product-details-wrapper {
+        margin-top: 1rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    /* 4. Thumbnails */
+    .pd-thumb-strip {
+        padding: 10px;
+        gap: 8px;
+    }
+    .thumb-img {
+        width: 60px; height: 60px; /* Slightly smaller thumbs */
+    }
+
+    /* 5. Info Panel Spacing */
+    .pd-info-panel {
+        padding-top: 20px;
+    }
+    
+    /* 6. Buy Button */
+    .btn-lg {
+        padding: 12px 20px;
+        font-size: 1rem;
+    }
+}
