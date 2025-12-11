@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<body>
+    <h3>Redirecting to the latest collection...</h3>
+    <script>
+        fetch('version.json')
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = "./" + data.current_version + "/index.html";
+            })
+            .catch(e => document.write("Error finding shop version."));
+    </script>
+</body>
+</html>

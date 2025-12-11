@@ -1,0 +1,11 @@
+[
+  {
+    "id": "SAREE_001",
+    "name": "Royal Blue Silk",
+    "price": "2500",
+    "stars": 4,
+    "image": "SAREE_001.jpg",
+    "desc": "Pure silk with golden zari work.",
+    "visible": true
+  }
+]

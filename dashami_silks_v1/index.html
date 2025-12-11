@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashami Silks | Indian Saree Collection</title>
+    <style>
+        :root {
+            --primary: #800000;  /* Maroon from Logo */
+            --bg: #FFF0E6;       /* Light Peach Background */
+            --card-bg: #ffffff;
+            --text: #333;
+        }
+        body { background-color: var(--bg); font-family: 'Georgia', serif; margin: 0; padding: 0; }
+        
+        header { background: var(--primary); color: white; padding: 30px 20px; text-align: center; }
+        header h1 { margin: 0; font-size: 2.5em; letter-spacing: 1px; font-weight: normal; }
+        header p { margin: 5px 0 0; font-size: 1.1em; letter-spacing: 3px; text-transform: uppercase; opacity: 0.9; }
+
+        .container { max-width: 1200px; margin: 30px auto; padding: 0 15px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 30px; }
+
+        .card { 
+            background: var(--card-bg); border-radius: 8px; overflow: hidden; 
+            box-shadow: 0 4px 15px rgba(128, 0, 0, 0.1); transition: transform 0.3s;
+        }
+        .card:hover { transform: translateY(-5px); }
+
+        .img-box { position: relative; width: 100%; aspect-ratio: 1/1; background: #eee; }
+        .product-img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info { padding: 20px; text-align: left; }
+        .cat { color: var(--primary); font-size: 0.75em; text-transform: uppercase; letter-spacing: 1px; font-weight: bold;}
+        .title { font-size: 1.2em; margin: 5px 0; color: #000; font-weight: normal; }
+        
+        .price-area { margin: 12px 0; }
+        .original-price { text-decoration: line-through; color: #888; font-size: 0.9em; margin-right: 8px; }
+        .final-price { color: var(--primary); font-weight: bold; font-size: 1.3em; }
+        
+        .meta { font-size: 0.85em; color: #666; margin-bottom: 12px; }
+        .stock-badge { background: #e0ffe0; color: #008000; padding: 3px 8px; border-radius: 4px; font-size: 0.8em; }
+        .stock-out { background: #ffe0e0; color: #800000; }
+
+        .reviews { background: #fafafa; padding: 10px; border-left: 3px solid var(--primary); font-size: 0.85em; font-style: italic; margin-bottom: 15px; color: #555; }
+
+        .btn-wa { 
+            display: block; background: #25D366; color: white; text-align: center; 
+            padding: 12px; text-decoration: none; border-radius: 4px; font-weight: bold; font-family: sans-serif;
+        }
+        .btn-wa:hover { background: #1ebc57; }
+
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Dashami Silks</h1>
+    <p>Indian Saree Collection</p>
+</header>
+
+<div class="container">
+    <div id="product-grid" class="grid">
+        </div>
+</div>
+
+<script>
+    const MY_NUMBER = "918904528959"; 
+
+    async function loadShop() {
+        const response = await fetch('data.json');
+        const products = await response.json();
+        const grid = document.getElementById('product-grid');
+
+        products.forEach(p => {
+            if (!p.visible || p.deleted) return;
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            let priceHtml = `<span class="final-price">₹${p.price}</span>`;
+            if(p.discount_price) {
+                priceHtml = `<span class="original-price">₹${p.price}</span> <span class="final-price">₹${p.discount_price}</span>`;
+            }
+
+            const stockClass = p.stock === 'Sold Out' ? 'stock-out' : 'stock-badge';
+            
+            const reviewHtml = p.reviews && p.reviews.length > 0 
+                ? `<div class="reviews">"${p.reviews[0]}"</div>` 
+                : '';
+
+            const imgHtml = `
+                <img class="product-img" loading="lazy"
+                     src="product_images/${p.image_hd}" 
+                     srcset="product_images/${p.image_thumb} 400w, product_images/${p.image_hd} 1200w"
+                     sizes="(max-width: 600px) 400px, 1200px"
+                     alt="${p.name}">
+            `;
+
+            // Updated WhatsApp Greeting
+            const msg = `Hello Dashami Silks, I am interested in:\n*${p.name}*\nID: ${p.id}\nPrice: ₹${p.discount_price || p.price}`;
+            const link = `https://wa.me/${MY_NUMBER}?text=${encodeURIComponent(msg)}`;
+
+            card.innerHTML = `
+                <div class="img-box">${imgHtml}</div>
+                <div class="info">
+                    <span class="cat">${p.category} | ${p.fabric}</span>
+                    <h3 class="title">${p.name}</h3>
+                    <div class="meta">Color: ${p.color} | <span class="${stockClass}">${p.stock}</span></div>
+                    <div class="price-area">${priceHtml}</div>
+                    <div style="color:gold; margin-bottom:8px;">${"★".repeat(p.stars)}</div>
+                    ${reviewHtml}
+                    <a href="${link}" class="btn-wa">Buy on WhatsApp</a>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+    }
+
+    loadShop();
+</script>
+
+</body>
+</html>
