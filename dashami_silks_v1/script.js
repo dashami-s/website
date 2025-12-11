@@ -1,14 +1,6 @@
 const MY_NUMBER = "918904528959"; 
 let allProducts = []; 
-
-// Auto-set the Copyright Year
 document.getElementById('year').textContent = new Date().getFullYear();
-
-// --- TOGGLE FILTER LOGIC ---
-function toggleFilters() {
-    const panel = document.getElementById('filterPanel');
-    panel.classList.toggle('show');
-}
 
 // --- MAIN LOADER ---
 async function loadShop() {
@@ -18,17 +10,17 @@ async function loadShop() {
         renderProducts(allProducts);
     } catch (error) {
         console.error("Could not load products:", error);
-        document.getElementById('product-grid').innerHTML = "<p>Loading failed. Please ensure data.json exists.</p>";
+        document.getElementById('product-grid').innerHTML = "<p>Loading failed.</p>";
     }
 }
 
-// --- RENDER PRODUCTS TO GRID ---
+// --- RENDER FUNCTION ---
 function renderProducts(products) {
     const grid = document.getElementById('product-grid');
     grid.innerHTML = ''; 
 
     if(products.length === 0) {
-        grid.innerHTML = '<p style="grid-column: 1/-1; text-align:center;">No products found.</p>';
+        grid.innerHTML = '<p class="text-center w-100">No products found matching your search.</p>';
         return;
     }
 
@@ -38,7 +30,6 @@ function renderProducts(products) {
         const card = document.createElement('div');
         card.className = 'card';
 
-        // Price Calculation
         let priceHtml = `<span class="final-price">₹${p.price}</span>`;
         if(p.discount_price) {
             priceHtml = `<span class="original-price">₹${p.price}</span> <span class="final-price">₹${p.discount_price}</span>`;
@@ -47,7 +38,6 @@ function renderProducts(products) {
         const stockClass = p.stock === 'Sold Out' ? 'stock-out' : 'stock-badge';
         const reviewHtml = p.reviews && p.reviews.length > 0 ? `<div class="reviews">"${p.reviews[0]}"</div>` : '';
 
-        // WhatsApp Message
         const msg = `Hello Dashami Silks, I am interested in:\n*${p.name}*\nID: ${p.id}\nPrice: ₹${p.discount_price || p.price}`;
         const link = `https://wa.me/${MY_NUMBER}?text=${encodeURIComponent(msg)}`;
 
@@ -74,7 +64,7 @@ function renderProducts(products) {
     });
 }
 
-// --- FILTER & SEARCH FUNCTIONS ---
+// --- FILTER & SEARCH ---
 function filterProducts() {
     const query = document.getElementById('searchBar').value.toLowerCase();
     const filtered = allProducts.filter(p => {
@@ -90,6 +80,7 @@ function filterProducts() {
 function filterCategory(cat, btn) {
     document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
+    
     if(cat === 'all') {
         renderProducts(allProducts);
     } else {
@@ -98,16 +89,14 @@ function filterCategory(cat, btn) {
     }
 }
 
-// --- LIGHTBOX FUNCTIONS ---
+// --- LIGHTBOX ---
 function openLightbox(imgSrc) {
     const lb = document.getElementById('lightbox');
     document.getElementById('lightbox-img').src = imgSrc;
     lb.style.display = 'flex';
 }
-
 function closeLightbox() {
     document.getElementById('lightbox').style.display = 'none';
 }
 
-// Start the App
 loadShop();
