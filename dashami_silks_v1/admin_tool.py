@@ -63,7 +63,7 @@ def generate_adaptive_images(filename):
 def home():
     return f"""
     <div style="font-family:sans-serif; text-align:center; padding:50px; background:#FFF0E6; color:#800000;">
-        <h1>Dashami Silks Admin Panel</h1> <a href='/add' style="background:#800000; color:white; padding:15px; text-decoration:none; margin:10px; display:inline-block;">1. Scan & Add New Products</a>
+        <h1>Dashami Silk Admin Panel</h1> <a href='/add' style="background:#800000; color:white; padding:15px; text-decoration:none; margin:10px; display:inline-block;">1. Scan & Add New Products</a>
         <a href='/manage' style="background:#800000; color:white; padding:15px; text-decoration:none; margin:10px; display:inline-block;">2. Manage Inventory</a>
         <a href='/trash' style="background:#555; color:white; padding:15px; text-decoration:none; margin:10px; display:inline-block;">3. Recycle Bin</a>
     </div>

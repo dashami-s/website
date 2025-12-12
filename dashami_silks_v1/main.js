@@ -21,8 +21,8 @@ let renderTimeout = null;
 window.addEventListener('error', function(e) {
     if (e.target.tagName === 'IMG') {
         const src = e.target.src;
-        if(!src.includes('product_images/logo_circle.png')) {
-             e.target.src = 'product_images/logo_circle.png';
+        if(!src.includes('logo/logo.png')) {
+             e.target.src = 'logo/logo.png';
              e.target.classList.add('opacity-50', 'p-4');
              if(e.target.parentElement.classList.contains('skeleton')) {
                 e.target.parentElement.classList.remove('skeleton');
@@ -291,7 +291,7 @@ function createProductCard(p) {
 
     // Use HD image if available, else standard image, else logo fallback
     const safeImg = (p.image && p.image.trim()) ? p.image : 
-                   (p.image_hd && p.image_hd.trim()) ? p.image_hd : 'product_images/logo_circle.png';
+                   (p.image_hd && p.image_hd.trim()) ? p.image_hd : 'logo/logo.png';
                    
     const safeStock = p.stock || "Ready to Ship";
     const safeColor = p.color || "Multi";
@@ -335,8 +335,11 @@ function createProductCard(p) {
             <div class="stars">${"★".repeat(p.stars || 5)}</div>
             <div class="review-snippet">${snippet}</div>
             <a href="${link}" target="_blank" class="btn-card-action" onclick="event.stopPropagation()">
-                Buy on WhatsApp
+                <i class="fa-brands fa-whatsapp fa-xl me-2"></i> Buy / Inquire on WhatsApp
             </a>
+            <p class="text-center text-muted extra-small mt-3 mb-0" style="font-size: 0.8rem;">
+                    <i class="fa-solid fa-lock me-1"></i> Secure checkout via WhatsApp
+            </p>
         </div>
     `;
     return card;

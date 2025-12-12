@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     
-    <title>Store Policies | Dashami Silks</title>
-    <link rel="icon" type="image/png" href="product_images/logo_circle.png">
+    <title>Store Policies | Dashami Silk</title>
+    <link rel="icon" type="image/png" href="logo/logo-circle.png">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -13,37 +13,11 @@
     
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="stylesheet" href="main.css"> 
 
     <style>
-        :root {
-            --primary: #800000;
-            --bg: #FFF0E6;
-            --card-bg: #ffffff;
-            --text: #333;
-        }
-
-        body { 
-            background-color: var(--bg); 
-            font-family: 'Lato', sans-serif; 
-            display: flex; 
-            flex-direction: column; 
-            min-height: 100vh; 
-            -webkit-tap-highlight-color: transparent; 
-        }
-
-        /* FONTS & HEADER */
-        .brand-font { font-family: 'Berkshire Swash', cursive; }
-        .brand-text h1 { font-family: 'Berkshire Swash', cursive; font-size: 1.6rem; letter-spacing: 1px; font-weight: normal; margin: 0; line-height: 1; }
-        .brand-text small { font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 1px; font-size: 0.65rem; }
-        header { background: var(--primary); }
-        .logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid white; object-fit: cover; background: white; }
-
-        /* FOOTER */
-        footer { background: var(--primary); border-top: 4px solid rgba(0,0,0,0.1); }
-        .social-icons a { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; font-size: 1.2rem; margin: 0 5px; text-decoration: none; transition: 0.3s; }
-        .social-icons a:hover { background: white; color: var(--primary); transform: translateY(-3px); }
-
-        /* ACCORDION STYLES */
+        /* Specific Styles for Policy Accordion */
         .accordion-item {
             border: none;
             margin-bottom: 15px;
@@ -79,35 +53,70 @@
 <body>
 
 <header class="sticky-top shadow-sm">
-    <div class="py-2 px-3">
-        <div class="container"> 
-            <div class="d-flex align-items-center justify-content-between">
-                
-                <a href="main.html" class="text-decoration-none d-flex align-items-center gap-2">
-                    <img src="logo/logo.png" alt="Logo" class="logo shadow-sm" onerror="this.src='product_images/logo_circle.png'">
-                    <div class="brand-text text-white lh-1">
-                        <h1 class="fs-4 m-0 fw-normal">Dashami Silks</h1>
-                        <small class="text-white-50 text-uppercase" style="letter-spacing: 1px; font-size: 0.65rem;">Indian Saree Collection</small>
+    <div class="px-3 py-2">
+        <div class="container d-flex align-items-center justify-content-between">
+            
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link text-white p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu">
+                    <i class="fa-solid fa-bars fa-lg"></i>
+                </button>
+
+                <a href="main.html" class="d-flex align-items-center text-decoration-none text-white">
+                    <img src="logo/logo.png" alt="Logo" class="logo shadow-sm d-none d-md-block me-2" style="width: 35px; height: 35px;" onerror="this.src='logo/logo.png'">
+                    <div class="brand-text lh-1">
+                        <h1 class="fs-5 m-0 fw-normal">Dashami Silk</h1>
                     </div>
                 </a>
-
-                <div>
-                    <a href="main.html" class="btn btn-outline-light btn-sm rounded-pill px-4">
-                        <i class="fa-solid fa-arrow-left me-2"></i> Back to Shop
-                    </a>
-                </div>
-
             </div>
+
+            <div>
+                <a href="main.html" class="btn btn-outline-light btn-sm rounded-pill px-4">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back to Shop
+                </a>
+            </div>
+
         </div>
     </div>
 </header>
+
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sideMenu" aria-labelledby="sideMenuLabel" style="background-color: #FFF0E6;">
+  <div class="offcanvas-header border-bottom border-danger-subtle">
+    <div class="d-flex align-items-center gap-2">
+        <img src="logo/logo.png" alt="Logo" class="rounded-circle border border-danger" width="40" height="40" onerror="this.src='logo/logo.png'">
+        <h5 class="offcanvas-title brand-font text-danger" id="sideMenuLabel">Dashami Silk</h5>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div class="list-group list-group-flush bg-transparent">
+        <a href="main.html" class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger">
+            <i class="fa-solid fa-house me-3"></i> Home
+        </a>
+        <a href="about.html" class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger">
+            <i class="fa-solid fa-circle-info me-3"></i> About Us
+        </a>
+        <button class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger text-start" data-bs-toggle="modal" data-bs-target="#contactModal">
+            <i class="fa-solid fa-address-book me-3"></i> Contact
+        </button>
+    </div>
+    
+    <div class="p-3 mt-2">
+        <h6 class="text-uppercase text-muted fw-bold small mb-3 ps-2">Store Policies</h6>
+        <div class="list-group list-group-flush rounded border border-danger-subtle overflow-hidden">
+            <a href="#" onclick="openPolicy('collapseTerms')" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Terms & Conditions</a>
+            <a href="#" onclick="openPolicy('collapsePrivacy')" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Privacy Policy</a>
+            <a href="#" onclick="openPolicy('collapseRefund')" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Refund Policy</a>
+            <a href="#" onclick="openPolicy('collapseShipping')" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Shipping Policy</a>
+        </div>
+    </div>
+  </div>
+</div>
 
 <div class="container my-5 flex-grow-1">
     <h2 class="brand-font text-center mb-4" style="color: var(--primary);">Store Policies</h2>
     
     <div class="accordion" id="policyAccordion">
         
-        <!-- Terms & Conditions -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingTerms">
                 <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTerms" aria-expanded="true" aria-controls="collapseTerms">
@@ -116,7 +125,7 @@
             </h2>
             <div id="collapseTerms" class="accordion-collapse collapse show" aria-labelledby="headingTerms" data-bs-parent="#policyAccordion">
                 <div class="accordion-body policy-content">
-                    <p>Welcome to Dashami Silks. By accessing our website and purchasing our products, you agree to the following terms and conditions.</p>
+                    <p>Welcome to Dashami Silk. By accessing our website and purchasing our products, you agree to the following terms and conditions.</p>
                     <ul>
                         <li>All products are subject to availability.</li>
                         <li>Prices are subject to change without prior notice.</li>
@@ -127,7 +136,6 @@
             </div>
         </div>
 
-        <!-- Privacy Policy -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingPrivacy">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapsePrivacy" aria-expanded="false" aria-controls="collapsePrivacy">
@@ -136,13 +144,12 @@
             </h2>
             <div id="collapsePrivacy" class="accordion-collapse collapse" aria-labelledby="headingPrivacy" data-bs-parent="#policyAccordion">
                 <div class="accordion-body policy-content">
-                    <p>Your privacy is important to us. Dashami Silks collects personal information only to fulfill your orders and improve your shopping experience.</p>
+                    <p>Your privacy is important to us. Dashami Silk collects personal information only to fulfill your orders and improve your shopping experience.</p>
                     <p>We do not sell, trade, or otherwise transfer to outside parties your personally identifiable information unless we provide users with advance notice.</p>
                 </div>
             </div>
         </div>
 
-        <!-- Refund Policy -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingRefund">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseRefund" aria-expanded="false" aria-controls="collapseRefund">
@@ -162,7 +169,6 @@
             </div>
         </div>
 
-        <!-- Shipping Policy -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingShipping">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseShipping" aria-expanded="false" aria-controls="collapseShipping">
@@ -178,7 +184,6 @@
             </div>
         </div>
 
-        <!-- Accessibility Statement -->
         <div class="accordion-item">
             <h2 class="accordion-header" id="headingAccess">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseAccess" aria-expanded="false" aria-controls="collapseAccess">
@@ -187,7 +192,7 @@
             </h2>
             <div id="collapseAccess" class="accordion-collapse collapse" aria-labelledby="headingAccess" data-bs-parent="#policyAccordion">
                 <div class="accordion-body policy-content">
-                    <p>Dashami Silks is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.</p>
+                    <p>Dashami Silk is committed to ensuring digital accessibility for people with disabilities. We are continually improving the user experience for everyone and applying the relevant accessibility standards.</p>
                 </div>
             </div>
         </div>
@@ -199,9 +204,8 @@
     <div class="container">
         <div class="row gy-4">
             
-            <!-- Address & Brand -->
             <div class="col-lg-5 text-center text-lg-start">
-                <h5 class="brand-font mb-3">Dashami Silks</h5>
+                <h5 class="brand-font mb-3">Dashami Silk</h5>
                 <p class="small opacity-75 mb-2">
                     <i class="fa-solid fa-location-dot me-2"></i>
                     Sri, Ramalinga chowdeshwari temple road, Saraswathipura, Weavers Colony, Nelamangala Town, Vajarahalli, Karnataka 562123.
@@ -209,22 +213,18 @@
                 <p class="small opacity-75 mb-3">
                     <i class="fa-solid fa-phone me-2"></i> +91 9880408959
                 </p>
-                <!-- Social Icons Container (Populated by JS) -->
                 <div class="social-icons justify-content-center justify-content-lg-start" id="footer-socials"></div>
             </div>
 
-            <!-- Shop Links -->
             <div class="col-6 col-lg-3 text-center text-lg-start ps-lg-5">
-                <h6 class="text-uppercase fw-bold mb-3 small opacity-50">Shop</h6>
+                <h6 class="text-uppercase fw-bold mb-3 small opacity-50">Menu</h6>
                 <ul class="list-unstyled">
                     <li class="mb-2"><a href="main.html" class="text-white text-decoration-none small opacity-75">Home</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none small opacity-75" data-bs-toggle="modal" data-bs-target="#aboutModal">About</a></li>
-                    <li class="mb-2"><a href="main.html" class="text-white text-decoration-none small opacity-75">Shop</a></li>
-                    <li class="mb-2"><a href="#" class="text-white text-decoration-none small opacity-75">Contact</a></li>
+                    <li class="mb-2"><a href="about.html" class="text-white text-decoration-none small opacity-75">About</a></li>
+                    <li class="mb-2"><a href="#" class="text-white text-decoration-none small opacity-75" data-bs-toggle="modal" data-bs-target="#contactModal">Contact</a></li>
                 </ul>
             </div>
 
-            <!-- Policy Links -->
             <div class="col-6 col-lg-4 text-center text-lg-start">
                 <h6 class="text-uppercase fw-bold mb-3 small opacity-50">Policy</h6>
                 <ul class="list-unstyled">
@@ -240,29 +240,50 @@
         
         <div class="row mt-4 pt-3 border-top border-white border-opacity-10">
             <div class="col-12 text-center">
-                <p class="m-0 small opacity-50">&copy; <span id="year"></span> Dashami Silks. All rights reserved.</p>
+                <p class="m-0 small opacity-50">&copy; <span id="year"></span> Dashami Silk. All rights reserved.</p>
             </div>
         </div>
     </div>
 </footer>
 
-<!-- About Modal -->
-<div class="modal fade" id="aboutModal" tabindex="-1" aria-labelledby="aboutModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
+<div class="modal fade" id="contactModal" tabindex="-1" aria-labelledby="contactModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content" style="background-color: #FFF0E6; border: 1px solid #800000;">
       <div class="modal-header border-0">
-        <h5 class="modal-title brand-font fs-3" id="aboutModalLabel" style="color: #800000;">Our Story</h5>
+        <h5 class="modal-title brand-font fs-3" id="contactModalLabel" style="color: #800000;">Get in Touch</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-center pb-4">
-        <img src="logo/logo.png" alt="Dashami Silks" width="80" class="rounded-circle border border-2 border-white shadow-sm mb-3">
-        <p class="lead fs-4 fst-italic px-2" style="color: #555; font-family: 'Lato', sans-serif; line-height: 1.6;">
-            "Born from a passion for timeless beauty rituals, we celebrate individuality and bring radiant confidence to everyone at <strong>Dashami Silks</strong>."
-        </p>
-        <hr class="w-25 mx-auto my-3" style="color: #800000; opacity: 0.3;">
-        <p class="text-muted mb-0 fs-6">
-            We weave tradition into every thread, honoring heritage while embracing modern elegance.
-        </p>
+      <div class="modal-body pb-4">
+        <div class="d-grid gap-3">
+            <a href="tel:+919880408959" class="btn btn-outline-danger d-flex align-items-center justify-content-start p-3" style="border-color: #800000; color: #800000;">
+                <i class="fa-solid fa-phone fa-lg me-3"></i>
+                <div class="text-start">
+                    <div class="small fw-bold text-uppercase">Call Us</div>
+                    <div>+91 98804 08959</div>
+                </div>
+            </a>
+            <a href="social_redirect.html?target=whatsapp%3A%2F%2Fsend%3Fphone%3D918904528959&platform=WhatsApp" target="_blank" class="btn btn-outline-success d-flex align-items-center justify-content-start p-3">
+                <i class="fa-brands fa-whatsapp fa-xl me-3"></i>
+                <div class="text-start">
+                    <div class="small fw-bold text-uppercase">WhatsApp Support</div>
+                    <div>Chat with us</div>
+                </div>
+            </a>
+             <a href="social_redirect.html?target=https%3A%2F%2Fwww.instagram.com%2Fdashami_silk&platform=Instagram" target="_blank" class="btn btn-outline-danger d-flex align-items-center justify-content-start p-3" style="border-color: #C13584; color: #C13584;">
+                <i class="fa-brands fa-instagram fa-xl me-3"></i>
+                <div class="text-start">
+                    <div class="small fw-bold text-uppercase">Instagram</div>
+                    <div>@dashami_silk</div>
+                </div>
+            </a>
+            <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+and+Sarees+Nelamangala" target="_blank" class="btn btn-light d-flex align-items-center justify-content-start p-3 border text-start">
+                <i class="fa-solid fa-location-dot fa-lg me-3 text-danger"></i>
+                <div>
+                    <div class="small fw-bold text-uppercase text-muted">Visit Us</div>
+                    <small class="text-dark">Sri, Ramalinga chowdeshwari temple road, Saraswathipura, Weavers Colony, Nelamangala Town.</small>
+                </div>
+            </a>
+        </div>
       </div>
     </div>
   </div>
@@ -291,14 +312,12 @@
     }
     loadFooter();
 
-    // Global Image Error Handler
+    // Global Image Error Handler (to fix broken logos)
     window.addEventListener('error', function(e) {
         if (e.target.tagName === 'IMG') {
             const src = e.target.src;
-            if(!src.includes('logo/logo.png') && !src.includes('product_images/logo_circle.png')) {
+            if(!src.includes('logo/logo.png')) {
                  e.target.src = 'logo/logo.png';
-            } else if (src.includes('logo/logo.png')) {
-                e.target.src = 'product_images/logo_circle.png';
             }
         }
     }, true);
@@ -310,6 +329,11 @@
             new bootstrap.Collapse(el, { show: true });
             el.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
+        
+        // Close sidebar on mobile if open
+        const offcanvas = document.getElementById('sideMenu');
+        const bsOffcanvas = bootstrap.Offcanvas.getInstance(offcanvas);
+        if(bsOffcanvas) bsOffcanvas.hide();
     }
 </script>
 </body>

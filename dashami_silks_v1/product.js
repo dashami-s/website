@@ -14,7 +14,7 @@ window.addEventListener('error', function(e) {
     if (e.target.tagName === 'IMG') {
         const src = e.target.src;
         // If image fails, switch to logo
-        if(!src.includes('logo/logo.png') && !src.includes('product_images/logo_circle.png')) {
+        if(!src.includes('logo/logo.png') && !src.includes('logo/logo.png')) {
              e.target.src = 'logo/logo.png';
              
              // ADDED BACK: Make the fallback logo dull (50% opacity) and padded
@@ -75,7 +75,7 @@ function loadProductDetails() {
     document.getElementById('pd-fabric').innerText = product.fabric || 'Silk';
     document.getElementById('pd-color').innerText = product.color || 'Multi';
     document.getElementById('pd-rating').innerText = "★".repeat(product.stars || 4);
-    document.title = `${product.name} | Dashami Silks`;
+    document.title = `${product.name} | Dashami Silk`;
     
     // Stock & Price Logic
     const stockEl = document.getElementById('pd-stock');
@@ -92,7 +92,7 @@ function loadProductDetails() {
     
     // WhatsApp
     const pageUrl = window.location.href; 
-    const msg = `Hello Dashami Silks, I want to buy:\n*${product.name}*\nID: ${product.id}\nLink: ${pageUrl}`;
+    const msg = `Hello Dashami Silk, I want to buy:\n*${product.name}*\nID: ${product.id}\nLink: ${pageUrl}`;
     const rawLink = `whatsapp://send?phone=${MY_NUMBER}&text=${encodeURIComponent(msg)}`;
     document.getElementById('pd-whatsapp-btn').href = `social_redirect.html?target=${encodeURIComponent(rawLink)}&platform=WhatsApp`;
     
