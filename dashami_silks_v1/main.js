@@ -4,11 +4,12 @@ let currentFilteredProducts = [];
 let activeCategory = 'all'; 
 let loadedCount = 0; 
 
-// CONFIGURATION
-// If screen is less than 768px (Mobile), load 20. Otherwise load 50.
+// CONFIGURATION & MOBILE OPTIMIZATION
 const isMobile = window.innerWidth < 768;
 const BATCH_SIZE = isMobile ? 20 : 50; 
 const BUTTON_CLICK_LIMIT = 2; 
+
+console.log(`Mobile Mode: ${isMobile}. Batch Size set to: ${BATCH_SIZE}`);
 
 // State Variables
 let loadMoreClicks = 0; 
@@ -47,7 +48,7 @@ async function init() {
         setupHeroSlider(allProducts);
         setupLoadMoreButton(); 
         
-        // Setup slider & trigger first load
+        // This triggers the initial load automatically
         setupDualSlider(allProducts);
 
     } catch (error) {
@@ -55,17 +56,17 @@ async function init() {
     }
 }
 
-// === UPDATED HERO SLIDER WITH FIX ===
+// === HERO SLIDER ===
 function setupHeroSlider(products) {
     const container = document.getElementById('hero-slides-container');
     const carouselEl = document.getElementById('heroCarousel');
     if(!container || !carouselEl) return;
 
-    // 1. STRICT FILTER: Must have image
+    // 1. STRICT & SAFE FILTER
     const validProducts = products.filter(p => 
         p.visible && 
         !p.deleted && 
-        ( (p.image && p.image.trim() !== "") || (p.image_hd && p.image_hd.trim() !== "") )
+        ( (p.image && p.image.trim().length > 0) || (p.image_hd && p.image_hd.trim().length > 0) )
     );
 
     if (validProducts.length === 0) {
@@ -73,11 +74,10 @@ function setupHeroSlider(products) {
         return;
     }
 
-    // 2. Randomize and pick 5
     const shuffled = [...validProducts].sort(() => 0.5 - Math.random());
     const featured = shuffled.slice(0, 5);
 
-    // 3. Inject Animation Styles (Zoom/Pan + Dots)
+    // Inject Animation CSS if not present
     if (!document.getElementById('hero-anim-styles')) {
         const style = document.createElement('style');
         style.id = 'hero-anim-styles';
@@ -101,34 +101,27 @@ function setupHeroSlider(products) {
             .fx-pan-right { animation-name: kbPanRight; }
             .fx-pan-left { animation-name: kbPanLeft; }
             
-            /* Custom Dot Styles */
-            .carousel-indicators { margin-bottom: 1.5rem; }
             .carousel-indicators [data-bs-target] {
                 width: 10px; height: 10px; border-radius: 50%;
-                background-color: #fff; opacity: 0.6; margin: 0 6px; border: none;
-                transition: all 0.3s ease;
+                background-color: #fff; opacity: 0.7; margin: 0 5px; border: none;
+                transition: all 0.3s;
             }
-            .carousel-indicators .active { 
-                opacity: 1; 
-                background-color: #800000; /* Maroon Active Dot */
-                transform: scale(1.3); 
-                box-shadow: 0 0 5px rgba(255,255,255,0.5);
-            }
+            .carousel-indicators .active { opacity: 1; background-color: var(--primary, #800000); transform: scale(1.2); }
         `;
         document.head.appendChild(style);
     }
 
     const effects = ['fx-zoom-in', 'fx-zoom-out', 'fx-pan-right', 'fx-pan-left'];
 
-    // 4. Generate Slides
     let slidesHtml = '';
     featured.forEach((p, index) => {
         const activeClass = index === 0 ? 'active' : '';
+        // Prioritize HD image
         const mainImg = (p.image_hd && p.image_hd.trim()) ? p.image_hd : p.image;
         const randomEffect = effects[Math.floor(Math.random() * effects.length)];
 
         slidesHtml += `
-            <div class="carousel-item ${activeClass} h-100" data-bs-interval="4000" onclick="window.open('product.html?id=${p.id}', '_blank')">
+            <div class="carousel-item ${activeClass} h-100" onclick="window.open('product.html?id=${p.id}', '_blank')">
                 <div style="overflow:hidden; width:100%; height:100%;">
                     <img src="${mainImg}" class="d-block w-100 hero-anim-img ${randomEffect}" alt="${p.name}">
                 </div>
@@ -141,7 +134,7 @@ function setupHeroSlider(products) {
     });
     container.innerHTML = slidesHtml;
 
-    // 5. Generate Dots
+    // Dots Generation
     const existingIndicators = carouselEl.querySelector('.carousel-indicators');
     if(existingIndicators) existingIndicators.remove();
 
@@ -151,27 +144,38 @@ function setupHeroSlider(products) {
     let dotsHtml = '';
     featured.forEach((_, index) => {
         const activeState = index === 0 ? 'class="active" aria-current="true"' : '';
-        // CRITICAL: data-bs-target MUST match the ID in HTML exactly (#heroCarousel)
         dotsHtml += `<button type="button" data-bs-target="#heroCarousel" data-bs-slide-to="${index}" ${activeState} aria-label="Slide ${index + 1}"></button>`;
     });
     indicatorsDiv.innerHTML = dotsHtml;
     carouselEl.appendChild(indicatorsDiv);
 
-    // 6. === CRITICAL FIX: RE-INITIALIZE BOOTSTRAP CAROUSEL ===
-    // This forces Bootstrap to recognize the new slides and dots
+    // === CRITICAL FIX: RE-INITIALIZE & SYNC DOTS ===
     try {
         if (window.bootstrap) {
             const carouselInstance = bootstrap.Carousel.getOrCreateInstance(carouselEl);
-            carouselInstance.dispose(); // Destroy old instance to clear state
-            new bootstrap.Carousel(carouselEl, {
+            carouselInstance.dispose(); 
+            const myCarousel = new bootstrap.Carousel(carouselEl, {
                 interval: 4000,
                 ride: 'carousel',
                 pause: 'hover'
             });
+
+            // MANUALLY SYNC DOTS ON SLIDE CHANGE
+            carouselEl.addEventListener('slide.bs.carousel', function (event) {
+                const activeIndex = event.to;
+                const dots = indicatorsDiv.querySelectorAll('button');
+                dots.forEach((dot, index) => {
+                    if (index === activeIndex) {
+                        dot.classList.add('active');
+                        dot.setAttribute('aria-current', 'true');
+                    } else {
+                        dot.classList.remove('active');
+                        dot.removeAttribute('aria-current');
+                    }
+                });
+            });
         }
-    } catch(e) { 
-        console.log("Carousel init notice:", e); 
-    }
+    } catch(e) { console.log("Carousel re-init notice:", e); }
 }
 
 function setupLoadMoreButton() {
@@ -226,6 +230,8 @@ function renderNextBatch() {
     renderTimeout = setTimeout(() => {
         const total = currentFilteredProducts.length;
         const start = loadedCount;
+        
+        // DYNAMIC BATCH SIZE
         const end = Math.min(start + BATCH_SIZE, total); 
         
         if (start >= total) {
@@ -251,6 +257,7 @@ function renderNextBatch() {
 
         if (loadedCount < total) {
             if (loadMoreClicks >= BUTTON_CLICK_LIMIT) {
+                // Infinite Scroll Mode
                 if (!isInfiniteScrollEnabled) {
                     isInfiniteScrollEnabled = true;
                     window.addEventListener('scroll', handleScroll);
@@ -258,6 +265,7 @@ function renderNextBatch() {
                 if(loadMoreBtn) loadMoreBtn.style.display = 'none';
             
             } else {
+                // Button Mode
                 if(loadMoreBtn) {
                     loadMoreBtn.style.display = 'inline-block';
                     const remaining = total - loadedCount;
@@ -281,6 +289,7 @@ function createProductCard(p) {
     const safeCat = p.category || "Saree";
     const safeFab = p.fabric || "Silk";
 
+    // Use HD image if available, else standard image, else logo fallback
     const safeImg = (p.image && p.image.trim()) ? p.image : 
                    (p.image_hd && p.image_hd.trim()) ? p.image_hd : 'product_images/logo_circle.png';
                    
@@ -308,6 +317,7 @@ function createProductCard(p) {
     const rawWaLink = `whatsapp://send?phone=${MY_NUMBER}&text=${encodeURIComponent(msg)}`;
     const link = `social_redirect.html?target=${encodeURIComponent(rawWaLink)}&platform=WhatsApp`;
 
+    // loading="lazy" added for performance
     card.innerHTML = `
         <div class="img-box skeleton">
             <div class="card-overlay"><span class="view-btn">View Details</span></div>
@@ -325,7 +335,7 @@ function createProductCard(p) {
             <div class="stars">${"★".repeat(p.stars || 5)}</div>
             <div class="review-snippet">${snippet}</div>
             <a href="${link}" target="_blank" class="btn-card-action" onclick="event.stopPropagation()">
-            <i class="fa-brands fa-whatsapp fa-xl me-2"></i> Buy / Inquire on WhatsApp
+                Buy on WhatsApp
             </a>
         </div>
     `;
@@ -334,6 +344,9 @@ function createProductCard(p) {
 
 function applyAllFilters() {
     if (renderTimeout) clearTimeout(renderTimeout);
+
+    // SCROLL TO TOP
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
     loadMoreClicks = 0;
     isInfiniteScrollEnabled = false;
@@ -347,18 +360,24 @@ function applyAllFilters() {
     const query = searchInput.value.toLowerCase().trim();
     const minPrice = parseInt(minPriceInput.value);
     const maxPrice = parseInt(maxPriceInput.value);
+    
+    // Rating Logic (Strict Match)
     const ratingEl = document.querySelector('input[name="ratingBtn"]:checked');
-    const minRating = ratingEl ? parseInt(ratingEl.value) : 0;
+    const targetRating = ratingEl ? parseInt(ratingEl.value) : 0;
 
     currentFilteredProducts = allProducts.filter(p => {
         if (!p.visible || p.deleted) return false;
         const matchesCategory = (activeCategory === 'all') || (p.category === activeCategory) || (p.fabric && p.fabric.includes(activeCategory));
         const searchStr = ((p.name||'') + (p.category||'') + (p.fabric||'') + (p.color||'') + (p.id||'')).toLowerCase();
         const price = parseInt(p.discount_price || p.price || 0);
+        
+        // Strict Rating: Exact match unless "All" (0) is selected
+        const matchR = (targetRating === 0) || ((p.stars || 0) === targetRating);
+
         return matchesCategory && 
                searchStr.includes(query) && 
                (price >= minPrice && price <= maxPrice) && 
-               ((p.stars || 0) >= minRating);
+               matchR;
     });
 
     const grid = document.getElementById('product-grid');
@@ -375,7 +394,7 @@ function applyAllFilters() {
         renderNextBatch(); 
     }
 
-    checkFilterAvailability(query, minPrice, maxPrice, activeCategory, minRating);
+    checkFilterAvailability(query, minPrice, maxPrice, activeCategory, targetRating);
 }
 
 async function loadFooter() {
@@ -447,7 +466,10 @@ function checkFilterAvailability(currentQuery, minP, maxP, currentCat, currentRa
             const price = parseInt(p.discount_price || p.price || 0);
             const matchS = searchStr.includes(currentQuery);
             const matchP = price >= minP && price <= maxP;
-            const matchR = (p.stars || 0) >= currentRating;
+            
+            // STRICT CHECK FOR BUTTON DISABLING
+            const matchR = (currentRating === 0) || ((p.stars || 0) === currentRating);
+            
             const matchC = (cat === 'all') || (p.category === cat) || (p.fabric && p.fabric.includes(cat));
             return matchS && matchP && matchR && matchC;
         }).length;
@@ -455,11 +477,20 @@ function checkFilterAvailability(currentQuery, minP, maxP, currentCat, currentRa
     });
 }
 
+// Close Filter Panel when clicking outside
 document.addEventListener('click', function(event) {
     const filterPanel = document.getElementById('filterPanel');
     const filterBtn = document.getElementById('filterToggleBtn');
-    if (filterPanel && filterPanel.classList.contains('show') && !filterPanel.contains(event.target) && !filterBtn.contains(event.target)) {
-        new bootstrap.Collapse(filterPanel).hide();
+    
+    if (!filterPanel || !filterBtn) return;
+
+    const isVisible = filterPanel.classList.contains('show');
+    const isClickInside = filterPanel.contains(event.target);
+    const isClickOnButton = filterBtn.contains(event.target);
+
+    if (isVisible && !isClickInside && !isClickOnButton) {
+        const bsCollapse = bootstrap.Collapse.getOrCreateInstance(filterPanel, { toggle: false });
+        bsCollapse.hide();
     }
 });
 

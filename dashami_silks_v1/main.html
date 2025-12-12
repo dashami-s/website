@@ -23,7 +23,6 @@
             <div class="row align-items-center g-1"> 
                 
                 <div class="col-7 col-md-3 d-flex align-items-center">
-                    
                     <button class="btn btn-link text-white p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu">
                         <i class="fa-solid fa-bars fa-lg"></i>
                     </button>
@@ -34,7 +33,6 @@
                             <h1 class="fs-5 m-0 fw-normal">Dashami Silks</h1>
                         </div>
                     </a>
-
                 </div>
 
                 <div class="col-5 col-md-3 order-md-3 text-end d-flex align-items-center justify-content-end gap-2">
@@ -74,17 +72,30 @@
                                 <input type="range" id="priceRangeMax" min="0" max="10000" value="10000" step="500" oninput="updateDualSlider()">
                             </div>
                         </div>
+                        
                         <div class="col-12">
-                            <h6 class="text-uppercase text-muted fw-bold mb-2 small">Minimum Rating</h6>
-                            <div class="btn-group w-100" role="group">
+                            <h6 class="text-uppercase text-muted fw-bold mb-2 small">Rating</h6>
+                            <div class="btn-group w-100 flex-wrap" role="group">
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rateAll" value="0" checked onchange="applyAllFilters()">
                                 <label class="btn btn-outline-secondary btn-sm" for="rateAll">All</label>
+                                
+                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate1" value="1" onchange="applyAllFilters()">
+                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate1">1★</label>
+
+                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate2" value="2" onchange="applyAllFilters()">
+                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate2">2★</label>
+
+                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate3" value="3" onchange="applyAllFilters()">
+                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate3">3★</label>
+
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate4" value="4" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate4">4★ & up</label>
+                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate4">4★</label>
+
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate5" value="5" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate5">5★ only</label>
+                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate5">5★</label>
                             </div>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -221,13 +232,15 @@
                     <div>@dashami_silk</div>
                 </div>
             </a>
-            <a href="https://maps.app.goo.gl/G1m9uNEEAtRzqX3D7" target="_blank" class="btn btn-light d-flex align-items-center justify-content-start p-3 border text-start">
+            
+            <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+and+Sarees+Nelamangala" target="_blank" class="btn btn-light d-flex align-items-center justify-content-start p-3 border text-start">
                 <i class="fa-solid fa-location-dot fa-lg me-3 text-danger"></i>
                 <div>
-                    <div class="small fw-bold text-uppercase text-muted">Visit Us - Dashami Silk and Sarees</div>
-                    <small class="text-dark">Sri, Ramalinga chowdeshwari temple road, Saraswathipura, Weavers Colony, Nelamangala Town, Karnataka 562123.</small>
+                    <div class="small fw-bold text-uppercase text-muted">Visit Us</div>
+                    <small class="text-dark">Sri, Ramalinga chowdeshwari temple road, Saraswathipura, Weavers Colony, Nelamangala Town.</small>
                 </div>
             </a>
+            
         </div>
       </div>
     </div>
