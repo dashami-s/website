@@ -131,15 +131,21 @@
     </a>
     
     <script>
-        // Fetch the version configuration and redirect
-        fetch('version.json')
+        // 1. Minimum wait time promise (3 seconds)
+        const minWaitPromise = new Promise(resolve => setTimeout(resolve, 3000));
+
+        // 2. Data fetch promise
+        const dataPromise = fetch('version.json')
             .then(response => {
                 if (!response.ok) {
                     throw new Error("Configuration file missing.");
                 }
                 return response.json();
-            })
-            .then(data => {
+            });
+
+        // 3. Wait for BOTH to complete before redirecting
+        Promise.all([minWaitPromise, dataPromise])
+            .then(([_, data]) => {
                 if (data.current_version) {
                     document.getElementById('status-msg').innerText = "Version found: " + data.current_version;
                     // Perform the redirect to the versioned folder
