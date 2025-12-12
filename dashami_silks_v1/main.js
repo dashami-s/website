@@ -2,20 +2,22 @@ const MY_NUMBER = "918904528959";
 let allProducts = []; 
 let currentFilteredProducts = []; 
 let activeCategory = 'all'; 
-
-// Infinite Scroll
 let loadedCount = 0; 
 let batchSize = 20; 
 let isLoading = false;
 
-// --- GLOBAL ERROR HANDLER ---
+// Global Error Handler
 window.addEventListener('error', function(e) {
     if (e.target.tagName === 'IMG') {
-        if(e.target.src.includes('logo/logo.png')) return;
-        e.target.src = 'logo/logo.png'; 
-        e.target.classList.add('opacity-50', 'p-4'); 
-        if(e.target.parentElement.classList.contains('skeleton')) {
-            e.target.parentElement.classList.remove('skeleton');
+        const src = e.target.src;
+        if(!src.includes('logo/logo.png') && !src.includes('product_images/logo_circle.png')) {
+             e.target.src = 'logo/logo.png';
+             e.target.classList.add('opacity-50', 'p-4');
+             if(e.target.parentElement.classList.contains('skeleton')) {
+                e.target.parentElement.classList.remove('skeleton');
+            }
+        } else if (src.includes('logo/logo.png')) {
+            e.target.src = 'product_images/logo_circle.png';
         }
     }
 }, true);
@@ -23,7 +25,7 @@ window.addEventListener('error', function(e) {
 const yearSpan = document.getElementById('year');
 if(yearSpan) yearSpan.textContent = new Date().getFullYear();
 
-// --- MAIN CONTROLLER ---
+// Initialize Main Page
 async function init() {
     try {
         loadFooter();
@@ -32,30 +34,21 @@ async function init() {
         if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
         try { allProducts = await response.json(); } catch (e) { throw new Error("Invalid JSON format."); }
         
-        // 1. MAIN SHOP PAGE LOGIC
-        if (document.getElementById('product-grid')) {
-            updateBatchSize();
-            window.addEventListener('resize', updateBatchSize);
-            
-            generateDynamicFilters(allProducts);
-            setupDualSlider(allProducts);
-            setupHeroSlider(allProducts);
-            applyAllFilters(); 
-            
-            window.addEventListener('scroll', handleScroll);
-        }
-
-        // 2. PRODUCT DETAILS PAGE LOGIC
-        if (document.getElementById('product-details-wrapper')) {
-            loadProductDetails();
-        }
+        updateBatchSize();
+        window.addEventListener('resize', updateBatchSize);
+        
+        generateDynamicFilters(allProducts);
+        setupDualSlider(allProducts);
+        setupHeroSlider(allProducts);
+        applyAllFilters(); 
+        
+        window.addEventListener('scroll', handleScroll);
 
     } catch (error) {
         console.error("Critical Error:", error);
     }
 }
 
-// --- INFINITE SCROLL ---
 function updateBatchSize() {
     batchSize = window.innerWidth >= 768 ? 50 : 20;
 }
@@ -94,7 +87,6 @@ function renderNextBatch() {
     }, 600);
 }
 
-// --- HELPER: CREATE CARD (OLD STYLE LOGIC) ---
 function createProductCard(p) {
     const card = document.createElement('div');
     card.className = 'card h-100'; 
@@ -107,7 +99,6 @@ function createProductCard(p) {
     const safeStock = p.stock || "Ready to Ship";
     const safeColor = p.color || "Multi";
     
-    // SMART SNIPPET: Use Review if available, else Description
     let snippet = '"Absolutely stunning quality. The zari work is real gold."';
     if(p.reviews && p.reviews.length > 0) {
         snippet = `"${p.reviews[0]}"`;
@@ -152,7 +143,6 @@ function createProductCard(p) {
     return card;
 }
 
-// --- FILTERING ---
 function applyAllFilters() {
     const searchInput = document.getElementById('searchBar');
     const minPriceInput = document.getElementById('priceRangeMin');
@@ -191,7 +181,6 @@ function applyAllFilters() {
     checkFilterAvailability(query, minPrice, maxPrice, activeCategory, minRating);
 }
 
-// --- UTILS ---
 async function loadFooter() {
     const container = document.getElementById('footer-socials');
     if(!container) return;
@@ -213,6 +202,7 @@ function selectCategory(cat, btn) {
     activeCategory = cat;
     applyAllFilters();
 }
+
 function generateDynamicFilters(products) {
     const container = document.getElementById('dynamic-category-filters');
     if(!container) return;
@@ -222,6 +212,7 @@ function generateDynamicFilters(products) {
     categories.forEach(cat => { html += `<button class="btn btn-sm btn-outline-danger rounded-pill filter-btn px-3" data-cat="${cat}" onclick="selectCategory('${cat}', this)">${cat}</button>`; });
     container.innerHTML = html;
 }
+
 function setupHeroSlider(products) {
     const container = document.getElementById('hero-slides-container');
     if(!container) return;
@@ -242,6 +233,7 @@ function setupHeroSlider(products) {
     });
     container.innerHTML = html;
 }
+
 function setupDualSlider(products) {
     let maxPrice = 0;
     products.forEach(p => { let price = parseInt(p.discount_price || p.price || 0); if(price > maxPrice) maxPrice = price; });
@@ -252,6 +244,7 @@ function setupDualSlider(products) {
     rangeMax.value = maxPrice + 500;
     updateDualSlider();
 }
+
 function updateDualSlider() {
     const rangeMin = document.getElementById('priceRangeMin');
     const rangeMax = document.getElementById('priceRangeMax');
@@ -267,6 +260,7 @@ function updateDualSlider() {
     track.style.background = `linear-gradient(to right, #ddd ${percentMin}%, var(--primary) ${percentMin}%, var(--primary) ${percentMax}%, #ddd ${percentMax}%)`;
     applyAllFilters();
 }
+
 function checkFilterAvailability(currentQuery, minP, maxP, currentCat, currentRating) {
     document.querySelectorAll('.filter-btn').forEach(btn => {
         const cat = btn.getAttribute('data-cat');
@@ -283,93 +277,6 @@ function checkFilterAvailability(currentQuery, minP, maxP, currentCat, currentRa
         if (count === 0) btn.classList.add('disabled'); else btn.classList.remove('disabled');
     });
 }
-
-// Product Page Logic
-let currentGallery = [];
-let currentIndex = 0;
-function loadProductDetails() {
-    const params = new URLSearchParams(window.location.search);
-    const productId = params.get('id');
-    const product = allProducts.find(p => p.id === productId);
-    if (!product) { document.getElementById('pd-title').innerText = "Product Not Found"; return; }
-    document.getElementById('pd-title').innerText = product.name;
-    document.getElementById('pd-cat').innerText = product.category || 'Saree';
-    document.getElementById('pd-desc').innerText = product.desc || 'No description available.';
-    document.getElementById('pd-fabric').innerText = product.fabric || 'Silk';
-    document.getElementById('pd-color').innerText = product.color || 'Multi';
-    document.getElementById('pd-rating').innerText = "★".repeat(product.stars || 4);
-    document.title = `${product.name} | Dashami Silks`;
-    
-    // Stock & Price Logic
-    const stockEl = document.getElementById('pd-stock');
-    stockEl.innerText = product.stock || 'In Stock';
-    stockEl.className = product.stock === 'Sold Out' ? 'text-danger fw-bold' : 'text-success fw-bold';
-    
-    if(product.discount_price) {
-        document.getElementById('pd-price').innerText = `₹${product.discount_price}`;
-        document.getElementById('pd-old-price').innerText = `₹${product.price}`;
-    } else {
-        document.getElementById('pd-price').innerText = `₹${product.price}`;
-        document.getElementById('pd-old-price').innerText = "";
-    }
-    
-    // WhatsApp
-    const pageUrl = window.location.href; 
-    const msg = `Hello Dashami Silks, I want to buy:\n*${product.name}*\nID: ${product.id}\nLink: ${pageUrl}`;
-    const rawLink = `whatsapp://send?phone=${MY_NUMBER}&text=${encodeURIComponent(msg)}`;
-    document.getElementById('pd-whatsapp-btn').href = `social_redirect.html?target=${encodeURIComponent(rawLink)}&platform=WhatsApp`;
-    
-    // Gallery
-    const mainImg = product.image || product.image_hd || 'logo/logo.png';
-    const gallery = product.gallery || [];
-    currentGallery = [mainImg, ...gallery];
-    currentIndex = 0;
-    const thumbContainer = document.getElementById('pd-thumbnails');
-    let thumbHTML = '';
-    currentGallery.forEach((img, idx) => { thumbHTML += `<img src="${img}" class="thumb-img" onclick="jumpToSlide(${idx})">`; });
-    thumbContainer.innerHTML = thumbHTML;
-    updateMainStage();
-}
-function changeSlide(direction) {
-    if(currentGallery.length <= 1) return;
-    currentIndex += direction;
-    if (currentIndex >= currentGallery.length) currentIndex = 0;
-    if (currentIndex < 0) currentIndex = currentGallery.length - 1;
-    updateMainStage();
-}
-function jumpToSlide(index) { currentIndex = index; updateMainStage(); }
-function updateMainStage() {
-    const img = document.getElementById('pd-main-img');
-    const fullImg = document.getElementById('fullscreen-img'); 
-    const thumbs = document.querySelectorAll('.thumb-img');
-    const counter = document.getElementById('image-counter');
-    thumbs.forEach((t, i) => {
-        if(i === currentIndex) { t.classList.add('active'); t.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' }); } 
-        else t.classList.remove('active');
-    });
-    if (counter) counter.textContent = `${currentIndex + 1} / ${currentGallery.length}`;
-    img.style.opacity = 0.5;
-    setTimeout(() => { img.src = currentGallery[currentIndex]; img.style.opacity = 1; }, 150);
-    
-    // Sync zoom view
-    if(fullImg) fullImg.src = currentGallery[currentIndex];
-}
-
-// Zoom Logic
-function openFullscreen() {
-    const viewer = document.getElementById('full-image-viewer');
-    const fullImg = document.getElementById('fullscreen-img');
-    fullImg.src = currentGallery[currentIndex];
-    viewer.style.display = 'flex';
-    document.body.style.overflow = 'hidden';
-}
-function closeFullscreen() {
-    document.getElementById('full-image-viewer').style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-document.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") closeFullscreen();
-});
 
 document.addEventListener('click', function(event) {
     const filterPanel = document.getElementById('filterPanel');
