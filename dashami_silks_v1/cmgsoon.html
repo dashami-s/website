@@ -2,205 +2,214 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashami Silks | Coming Soon</title>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Coming Soon | Dashami Silk</title>
+    <link rel="icon" type="image/png" href="logo/logo-circle.png">
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&family=Playfair+Display:ital,wght@0,600;0,800;1,600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================
-           YOUR SMART ADAPTIVE HEADER CSS
+           SMART ADAPTIVE HEADER
            ========================================= */
         #floating-header {
-            background: rgba(80, 0, 0, 0.95); /* Deep Maroon */
+            background: rgba(128, 0, 0, 0.95); /* Deep Maroon */
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(212, 175, 55, 0.3); /* GOLD Border opacity */
+            border-bottom: 1px solid rgba(255, 240, 230, 0.1);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
             
-            position: fixed; 
+            position: fixed;
             display: flex;
             align-items: center;
-            justify-content: space-between;
+            /* Center the content since buttons are removed */
+            justify-content: center; 
             padding: 15px 30px;
             box-sizing: border-box;
-            z-index: 1020; 
+            z-index: 1020;
         }
 
-        /* 2. MOBILE & TABLET PORTRAIT (< 992px) */
+        /* MOBILE & TABLET PORTRAIT (< 992px) */
         @media (max-width: 991px) {
             #floating-header {
                 top: 0 !important;
                 left: 0 !important;
                 width: 100% !important;
                 border-radius: 0 0 20px 20px;
-                flex-direction: column;
-                gap: 15px;
                 padding-bottom: 20px;
             }
         }
 
-        /* 3. DESKTOP & LANDSCAPE (> 992px) */
+        /* DESKTOP & LANDSCAPE (> 992px) */
         @media (min-width: 992px) {
             #floating-header {
-                top: clamp(10px, 2vh, 20px) !important; 
-                width: clamp(600px, 92vw, 1200px) !important;
+                top: clamp(10px, 2vh, 20px) !important;
+                /* Adjusted width for just the logo */
+                width: auto !important;
+                min-width: 300px;
                 left: 50% !important;
                 transform: translateX(-50%);
                 right: auto !important;
                 
                 border-radius: 50px;
-                border: 1px solid rgba(212, 175, 55, 0.2); /* Subtle Gold Border */
-                background: rgba(80, 0, 0, 0.9) !important;
+                border: 1px solid rgba(255, 255, 255, 0.15);
+                background: rgba(128, 0, 0, 0.9) !important;
             }
-
-            #filterPanel {
-                margin-top: 0; 
-                padding-top: 0;
-                border-top: none; 
-                display: flex;
-                gap: 10px;
-            }
-        }
-
-        /* 4. ULTRAWIDE SCREENS (> 1600px) */
-        @media (min-width: 1600px) {
-            #floating-header {
-                width: 1300px !important;
-            }
-        }
-
-        /* 5. VISIBILITY FIXES inside Maroon Header */
-        /* Changed hover color to Gold for Dashami Silks */
-        #filterPanel .btn-outline-light:hover,
-        #filterPanel .btn-check:checked + .btn-outline-light {
-            color: #500000; /* Dark Maroon Text */
-            background-color: #D4AF37; /* Gold Background */
-            border-color: #D4AF37;
-            font-weight: 600;
-            box-shadow: 0 0 15px rgba(212, 175, 55, 0.4);
         }
 
         /* =========================================
-           DASHAMI SILKS PAGE STYLES
+           PAGE STYLING (Dark Luxury Theme)
            ========================================= */
         body, html {
             height: 100%;
             margin: 0;
-            font-family: 'Montserrat', sans-serif; /* Clean font for body */
-            background-color: #0a0000;
+            font-family: 'Lato', sans-serif;
+            background-color: #050000;
             color: white;
             overflow-x: hidden;
         }
 
-        /* Branding Text in Header */
-        .header-brand {
-            font-family: 'Playfair Display', serif; /* Luxury Serif */
-            font-weight: 800;
-            color: #fff;
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .brand-font { font-family: 'Cinzel', serif; }
+        .accent-font { font-family: 'Berkshire Swash', cursive; }
+
+        /* Header Logo Area */
+        .header-brand-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
             text-decoration: none;
-            font-size: 1.4rem;
+            color: white;
         }
-        
-        .header-brand span {
-            color: #D4AF37; /* Gold Color */
-            font-style: italic;
+        .header-logo {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid #FFF0E6;
+            object-fit: cover;
         }
 
         /* Hero Section */
         .hero-section {
-            height: 100vh;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            /* Deep Velvet Gradient */
-            background: radial-gradient(circle at 50% 50%, #3d0000 0%, #000000 90%);
-            padding: 20px;
+            background: radial-gradient(circle at 50% 50%, #5e0000 0%, #000000 90%);
+            padding: 100px 20px 40px 20px;
             position: relative;
         }
 
-        /* Optional: Subtle Mesh Pattern Overlay */
         .hero-section::before {
             content: "";
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background-image: radial-gradient(#D4AF37 1px, transparent 1px);
-            background-size: 40px 40px;
-            opacity: 0.05; /* Very subtle gold dots */
+            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFF0E6' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.5;
             pointer-events: none;
         }
 
-        .hero-title {
-            font-family: 'Playfair Display', serif;
-            font-size: clamp(3rem, 7vw, 6.5rem);
-            line-height: 1.1;
+        .main-title {
+            font-family: 'Cinzel', serif;
+            font-size: clamp(2.5rem, 6vw, 5rem);
             font-weight: 600;
-            /* Gold to White Gradient Text */
-            background: linear-gradient(to right, #D4AF37, #fff, #D4AF37);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 15px;
+            color: #FFF0E6;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
             opacity: 0;
-            animation: fadeUp 1.2s ease-out forwards 0.3s;
-            letter-spacing: -1px;
+            animation: fadeUp 1s ease-out forwards 0.3s;
         }
 
-        .hero-subtitle {
-            font-size: clamp(0.9rem, 1.5vw, 1.2rem);
-            color: rgba(255,255,255,0.8);
-            max-width: 600px;
-            margin-bottom: 40px;
-            opacity: 0;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            animation: fadeUp 1s ease-out forwards 0.8s;
-        }
-
-        /* Gold Progress Bar */
-        .progress-container {
-            width: 100%;
-            max-width: 300px;
-            height: 2px;
-            background: rgba(255,255,255,0.1);
+        .tagline {
+            font-family: 'Berkshire Swash', cursive;
+            color: #dcbfa6; 
+            font-size: clamp(1.2rem, 2vw, 1.8rem);
+            max-width: 700px;
             margin-bottom: 30px;
+            line-height: 1.4;
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards 0.6s;
+        }
+
+        .description {
+            font-family: 'Lato', sans-serif;
+            color: rgba(255, 255, 255, 0.7);
+            max-width: 600px;
+            margin: 0 auto 50px auto;
+            font-size: 1rem;
+            opacity: 0;
+            animation: fadeUp 1s ease-out forwards 0.9s;
+        }
+
+        /* Location Button */
+        .location-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            color: #FFF0E6;
+            margin-bottom: 40px;
+            text-decoration: none;
+            transition: all 0.3s ease;
             opacity: 0;
             animation: fadeIn 1s ease-out forwards 1.2s;
         }
-
-        .progress-bar-fill {
-            height: 100%;
-            width: 60%; 
-            background: #D4AF37;
-            box-shadow: 0 0 15px #D4AF37;
-            position: relative;
-        }
         
-        /* Shining effect on bar */
-        .progress-bar-fill::after {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; bottom: 0; right: 0;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-            transform: translateX(-100%);
-            animation: shimmer 2.5s infinite;
+        .location-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: #FFF0E6;
+            transform: translateY(-2px);
+            color: white;
         }
 
-        /* Animations */
+        /* Contact Area */
+        .contact-strip {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 1.5s;
+        }
+
+        .contact-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFF0E6;
+            border: 1px solid rgba(128, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .contact-icon:hover {
+            background: #800000;
+            transform: translateY(-5px);
+            color: white;
+            box-shadow: 0 5px 15px rgba(128,0,0,0.4);
+        }
+
         @keyframes fadeUp {
-            from { transform: translateY(40px); opacity: 0; }
+            from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
         }
         @keyframes fadeIn {
             to { opacity: 1; }
-        }
-        @keyframes shimmer {
-            100% { transform: translateX(100%); }
         }
 
     </style>
@@ -208,34 +217,44 @@
 <body>
 
     <header id="floating-header">
-        <a href="#" class="header-brand">
-            DASHAMI <span>SILKS</span>
+        <a href="#" class="header-brand-area">
+            <img src="logo/logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/45/800000/FFF0E6?text=D'">
+            <div>
+                <h1 class="brand-font m-0 fs-4 text-white lh-1">DASHAMI SILK</h1>
+                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2025</small>
+            </div>
         </a>
-
-        <div id="filterPanel">
-            <button class="btn btn-outline-light btn-sm rounded-pill px-4">Heritage</button>
-            <button class="btn btn-outline-light btn-sm rounded-pill px-4">Collections</button>
-            
-            <input type="checkbox" class="btn-check" id="btn-check-outlined" autocomplete="off" checked>
-            <label class="btn btn-outline-light btn-sm rounded-pill px-4" for="btn-check-outlined">Notify Launch</label>
-        </div>
     </header>
 
     <section class="hero-section">
-        <h1 class="hero-title">WEAVING<br>ROYALTY</h1>
         
-        <p class="hero-subtitle">
-            Pure Kanjeevarams & Handloom Heritage
+        <h1 class="main-title">WEAVING<br>TRADITION</h1>
+        
+        <p class="tagline">
+            "Born from a passion for timeless beauty rituals."
         </p>
 
-        <div class="progress-container">
-            <div class="progress-bar-fill"></div>
-        </div>
-
-        <p style="color: #D4AF37; font-size: 0.8rem; letter-spacing: 1px; opacity: 0.7;">
-            OPENING SOON IN BENGALURU
+        <p class="description">
+            We weave tradition into every thread, honoring heritage while embracing modern elegance. 
+            Our upcoming collection is handpicked to ensure the highest quality of silk and craftsmanship.
         </p>
+
+        <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+Sarees+Nelamangala+Weavers+Colony" target="_blank" class="location-btn">
+            <i class="fa-solid fa-map-location-dot text-danger"></i>
+            <span>Locate Us in Nelamangala</span>
+        </a>
+
+        <div class="contact-strip">
+            <a href="https://wa.me/918904528959" target="_blank" class="contact-icon" title="WhatsApp">
+                <i class="fa-brands fa-whatsapp"></i>
+            </a>
+            <a href="https://www.instagram.com/dashami_silk" target="_blank" class="contact-icon" title="Instagram">
+                <i class="fa-brands fa-instagram"></i>
+            </a>
+
     </section>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>
 </html>
