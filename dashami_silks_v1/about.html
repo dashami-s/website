@@ -17,23 +17,67 @@
 </head>
 <body>
 
-<header class="sticky-top shadow-sm" style="background: var(--primary);">
-    <div class="py-2 px-3">
+<header id="floating-header" class="fixed-top">
+    <div class="px-3 py-2">
         <div class="container d-flex align-items-center justify-content-between">
-            <a href="main.html" class="text-decoration-none d-flex align-items-center gap-2">
-                <img src="logo/logo.png" alt="Logo" class="logo shadow-sm" style="width: 40px; height: 40px;" onerror="this.src='logo/logo.png'">
-                <div class="brand-text text-white lh-1">
-                    <h1 class="fs-4 m-0 fw-normal">Dashami Silk</h1>
-                </div>
-            </a>
-            <a href="main.html" class="btn btn-outline-light btn-sm rounded-pill px-3">
-                <i class="fa-solid fa-arrow-left me-2"></i> Back to Shop
-            </a>
+            
+            <div class="d-flex align-items-center">
+                <button class="btn btn-link text-white p-0 me-3" type="button" data-bs-toggle="offcanvas" data-bs-target="#sideMenu" aria-controls="sideMenu">
+                    <i class="fa-solid fa-bars fa-lg"></i>
+                </button>
+
+                <a href="main.html" class="d-flex align-items-center text-decoration-none text-white">
+                    <img src="logo/logo.png" alt="Logo" class="logo shadow-sm d-none d-md-block me-2" style="width: 35px; height: 35px;" onerror="this.src='logo/logo.png'">
+                    <div class="brand-text lh-1">
+                        <h1 class="fs-5 m-0 fw-normal">Dashami Silk</h1>
+                    </div>
+                </a>
+            </div>
+
+            <div>
+                <a href="main.html" class="btn btn-outline-light btn-sm rounded-pill px-4">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back to Shop
+                </a>
+            </div>
+
         </div>
     </div>
 </header>
 
-<div class="container my-5 flex-grow-1">
+<div class="offcanvas offcanvas-start" tabindex="-1" id="sideMenu" aria-labelledby="sideMenuLabel" style="background-color: #FFF0E6;">
+  <div class="offcanvas-header border-bottom border-danger-subtle">
+    <div class="d-flex align-items-center gap-2">
+        <img src="logo/logo.png" alt="Logo" class="rounded-circle border border-danger" width="40" height="40" onerror="this.src='logo/logo.png'">
+        <h5 class="offcanvas-title brand-font text-danger" id="sideMenuLabel">Dashami Silk</h5>
+    </div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <div class="list-group list-group-flush bg-transparent">
+        <a href="main.html" class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger">
+            <i class="fa-solid fa-house me-3"></i> Home
+        </a>
+        <a href="about.html" class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger">
+            <i class="fa-solid fa-circle-info me-3"></i> About Us
+        </a>
+        <button class="list-group-item list-group-item-action bg-transparent border-danger-subtle py-3 fw-bold text-danger text-start" data-bs-toggle="modal" data-bs-target="#contactModal">
+            <i class="fa-solid fa-address-book me-3"></i> Contact
+        </button>
+    </div>
+    
+    <div class="p-3 mt-2">
+        <h6 class="text-uppercase text-muted fw-bold small mb-3 ps-2">Store Policies</h6>
+        <div class="list-group list-group-flush rounded border border-danger-subtle overflow-hidden">
+            <a href="policies.html" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Terms & Conditions</a>
+            <a href="policies.html" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Privacy Policy</a>
+            <a href="policies.html" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Refund Policy</a>
+            <a href="policies.html" class="list-group-item list-group-item-action bg-white border-danger-subtle py-2 small">Shipping Policy</a>
+        </div>
+    </div>
+  </div>
+</div>
+
+<div class="container my-5 flex-grow-1" style="padding-top: 20px;">
     <div class="row justify-content-center">
         <div class="col-lg-8 text-center">
             <h2 class="brand-font mb-4" style="color: #800000; font-size: 2.5rem;">Our Story</h2>
