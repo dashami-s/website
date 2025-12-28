@@ -17,7 +17,7 @@
 </head>
 <body>
 
-<header class="sticky-top shadow-sm">
+<header id="floating-header" class="fixed-top">
     <div class="px-3 py-2">
         <div class="container"> 
             <div class="row align-items-center g-1"> 
@@ -44,10 +44,10 @@
                     </button>
                 </div>
 
-                <div class="col-12 col-md-6 order-md-2 mt-1 mt-md-0 collapse d-md-block" id="searchPanel">
-                    <div class="input-group input-group-sm rounded-pill overflow-hidden border-0 bg-white">
-                        <span class="input-group-text bg-white border-0 text-muted ps-3"><i class="fa-solid fa-magnifying-glass"></i></span>
-                        <input type="text" id="searchBar" class="form-control border-0 shadow-none" style="font-size: 0.9rem;" placeholder="Search by ID, Fabric, Color..." onkeyup="applyAllFilters()">
+                <div class="col-12 col-md-6 order-md-2 mt-2 mt-md-0 collapse d-md-block" id="searchPanel">
+                    <div class="input-group input-group-sm rounded-pill overflow-hidden border-0 shadow-sm" style="background: rgba(255,255,255,0.95);">
+                        <span class="input-group-text border-0 text-muted ps-3" style="background: transparent;"><i class="fa-solid fa-magnifying-glass"></i></span>
+                        <input type="text" id="searchBar" class="form-control border-0 shadow-none" style="background: transparent; font-size: 0.9rem;" placeholder="Search by ID, Fabric, Color..." onkeyup="applyAllFilters()">
                     </div>
                 </div>
 
@@ -55,47 +55,36 @@
         </div>
     </div>
 
-    <div class="collapse bg-white border-bottom border-top" id="filterPanel">
-        <div class="container py-3">
+    <div class="collapse" id="filterPanel">
+        <div class="container py-3 text-white">
             <div class="row g-3">
                 <div class="col-md-6 border-end-md">
-                    <h6 class="text-uppercase text-muted fw-bold mb-2 small">By Category & Fabric</h6>
+                    <h6 class="text-uppercase fw-bold mb-2 small text-white-50">By Category & Fabric</h6>
                     <div id="dynamic-category-filters" class="d-flex flex-wrap gap-2"></div>
                 </div>
                 <div class="col-md-6">
                     <div class="row g-3">
                         <div class="col-12">
-                            <h6 class="text-uppercase text-muted fw-bold mb-3 small">Price: ₹<span id="priceMinDisplay">0</span> - ₹<span id="priceMaxDisplay">10000</span></h6>
+                            <h6 class="text-uppercase fw-bold mb-3 small text-white-50">Price: ₹<span id="priceMinDisplay">0</span> - ₹<span id="priceMaxDisplay">10000</span></h6>
                             <div class="range-slider-container">
                                 <div class="slider-track"></div>
                                 <input type="range" id="priceRangeMin" min="0" max="10000" value="0" step="500" oninput="updateDualSlider()">
                                 <input type="range" id="priceRangeMax" min="0" max="10000" value="10000" step="500" oninput="updateDualSlider()">
                             </div>
                         </div>
-                        
                         <div class="col-12">
-                            <h6 class="text-uppercase text-muted fw-bold mb-2 small">Rating</h6>
+                            <h6 class="text-uppercase fw-bold mb-2 small text-white-50">Rating</h6>
                             <div class="btn-group w-100 flex-wrap" role="group">
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rateAll" value="0" checked onchange="applyAllFilters()">
-                                <label class="btn btn-outline-secondary btn-sm" for="rateAll">All</label>
+                                <label class="btn btn-outline-light btn-sm rounded-pill me-1 mb-1" for="rateAll">All</label>
                                 
-                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate1" value="1" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate1">1★</label>
-
-                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate2" value="2" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate2">2★</label>
-
-                                <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate3" value="3" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate3">3★</label>
-
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate4" value="4" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate4">4★</label>
+                                <label class="btn btn-outline-light btn-sm rounded-pill me-1 mb-1" for="rate4">4★+</label>
 
                                 <input type="radio" class="btn-check rating-opt" name="ratingBtn" id="rate5" value="5" onchange="applyAllFilters()">
-                                <label class="btn btn-outline-warning btn-sm text-dark" for="rate5">5★</label>
+                                <label class="btn btn-outline-light btn-sm rounded-pill me-1 mb-1" for="rate5">5★</label>
                             </div>
                         </div>
-
                     </div>
                 </div>
             </div>

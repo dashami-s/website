@@ -5,16 +5,26 @@
     --text: #333;
 }
 
-body { background-color: var(--bg); font-family: 'Lato', sans-serif; display: flex; flex-direction: column; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+/* 1. GLOBAL BASE STYLES */
+body { 
+    background-color: var(--bg); 
+    font-family: 'Lato', sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh; 
+    -webkit-tap-highlight-color: transparent; 
+    
+    /* Dynamic padding ensures content is never hidden behind the header */
+    padding-top: clamp(80px, 12vh, 140px) !important;
+}
 
-/* FONTS & HEADER */
+/* FONTS & BRANDING */
 .brand-font { font-family: 'Berkshire Swash', cursive; }
 .brand-text h1 { font-family: 'Berkshire Swash', cursive; font-size: 1.6rem; letter-spacing: 1px; font-weight: normal; margin: 0; line-height: 1; }
 .brand-text small { font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 1px; font-size: 0.65rem; }
-header { background: var(--primary); }
 .logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid white; object-fit: cover; background: white; }
 
-/* SLIDER */
+/* SLIDER (Price Range) */
 .range-slider-container { position: relative; width: 100%; height: 35px; text-align: center; }
 .range-slider-container input[type="range"] { position: absolute; left: 0; bottom: 0; width: 100%; pointer-events: none; -webkit-appearance: none; background: none; z-index: 2; height: 35px; }
 .range-slider-container input[type="range"]::-webkit-slider-thumb { 
@@ -57,9 +67,7 @@ header { background: var(--primary); }
     pointer-events: none;
 }
 
-.hero-title, .hero-price, #heroCarousel .btn {
-    pointer-events: auto;
-}
+.hero-title, .hero-price, #heroCarousel .btn { pointer-events: auto; }
 
 .hero-title {
     font-family: 'Berkshire Swash', cursive;
@@ -87,11 +95,7 @@ header { background: var(--primary); }
     transition: all 0.3s;
     color: white;
 }
-#heroCarousel .btn:hover {
-    background: white;
-    color: var(--primary);
-    border-color: white;
-}
+#heroCarousel .btn:hover { background: white; color: var(--primary); border-color: white; }
 
 @media (max-width: 768px) {
     .hero-title { font-size: 1.4rem; }
@@ -167,3 +171,76 @@ header { background: var(--primary); }
 footer { background: var(--primary); border-top: 4px solid rgba(0,0,0,0.1); }
 .social-icons a { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 50%; background: rgba(255,255,255,0.1); color: white; font-size: 1.2rem; margin: 0 5px; text-decoration: none; transition: 0.3s; }
 .social-icons a:hover { background: white; color: var(--primary); transform: translateY(-3px); }
+
+
+/* === SMART ADAPTIVE HEADER === */
+
+#floating-header {
+    background: rgba(128, 0, 0, 0.95); /* Deep Maroon */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth morphing */
+    z-index: 1050;
+}
+
+/* 2. MOBILE & TABLET PORTRAIT (< 992px) */
+/* Stays full width to save precious screen space */
+@media (max-width: 991px) {
+    #floating-header {
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        border-radius: 0 0 20px 20px; /* Slight curve at bottom only */
+    }
+}
+
+/* 3. DESKTOP & LANDSCAPE (> 992px) */
+/* Morphs into the Floating Pill */
+@media (min-width: 992px) {
+    #floating-header {
+        /* SMART POSITIONING */
+        /* Clamps the top distance: min 10px, max 20px depending on screen height */
+        top: clamp(10px, 2vh, 20px) !important; 
+        
+        /* SMART WIDTH */
+        /* Never smaller than 600px, tries to be 92% of screen, capped at 1200px */
+        width: clamp(600px, 92vw, 1200px) !important;
+        
+        /* CENTERING */
+        left: 50% !important;
+        transform: translateX(-50%);
+        right: auto !important;
+        
+        /* SHAPE */
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(128, 0, 0, 0.9) !important;
+    }
+
+    /* Remove the internal border line inside the pill for cleaner look */
+    #filterPanel {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+}
+
+/* 4. ULTRAWIDE SCREENS (> 1600px) */
+/* Prevent it from looking tiny on huge screens */
+@media (min-width: 1600px) {
+    #floating-header {
+        width: 1300px !important; /* Allow it to be slightly wider */
+    }
+}
+
+/* 5. VISIBILITY FIXES for Buttons inside the Maroon Header */
+#filterPanel .btn-outline-light:hover,
+#filterPanel .btn-check:checked + .btn-outline-light {
+    color: #800000;
+    background-color: white;
+    border-color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
+}
