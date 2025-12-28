@@ -11,20 +11,19 @@
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@600;800&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
 
     <style>
         /* =========================================
            SMART ADAPTIVE HEADER
            ========================================= */
         #floating-header {
-            background: rgba(128, 0, 0, 0.95); /* Deep Maroon */
+            background: rgba(128, 0, 0, 0.95);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border-bottom: 1px solid rgba(255, 240, 230, 0.1);
             box-shadow: 0 8px 32px rgba(0,0,0,0.3);
             transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            
             position: fixed;
             display: flex;
             align-items: center;
@@ -49,12 +48,10 @@
         @media (min-width: 992px) {
             #floating-header {
                 top: clamp(10px, 2vh, 20px) !important;
-                /* MODIFIED: Increased width for desktop */
                 width: clamp(500px, 70vw, 1000px) !important;
                 left: 50% !important;
                 transform: translateX(-50%);
                 right: auto !important;
-                
                 border-radius: 50px;
                 border: 1px solid rgba(255, 255, 255, 0.15);
                 background: rgba(128, 0, 0, 0.9) !important;
@@ -62,7 +59,7 @@
         }
 
         /* =========================================
-           PAGE STYLING (Dark Luxury Theme)
+           PAGE STYLING
            ========================================= */
         body, html {
             height: 100%;
@@ -101,12 +98,12 @@
             align-items: center;
             text-align: center;
             background: radial-gradient(circle at 50% 50%, #5e0000 0%, #000000 90%);
-            padding: 100px 20px 40px 20px;
+            padding: 120px 20px 60px 20px;
             position: relative;
-            overflow: hidden; /* Ensure animations don't cause scroll */
+            overflow: hidden;
         }
 
-        /* MODIFIED: Animated Background Texture */
+        /* Animated Background Texture */
         .hero-section::before {
             content: "";
             position: absolute;
@@ -117,46 +114,92 @@
             animation: bgDrift 60s linear infinite alternate;
         }
 
-        /* MODIFIED: Shimmering Main Title */
-        .main-title {
+        /* "Coming Soon" styling */
+        .coming-soon-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 600;
+            font-size: clamp(3rem, 9vw, 6.5rem); /* HUGE FONT */
+            font-weight: 800;
+            line-height: 1.1;
+            letter-spacing: 2px;
             
-            /* Shimmer Gradient setup */
-            color: #FFF0E6; /* Fallback */
-            background: linear-gradient(to right, #FFF0E6 0%, #fff5ee 20%, #ffffff 50%, #fff5ee 80%, #FFF0E6 100%);
+            /* Shimmer Gradient */
+            background: linear-gradient(to right, #b08d55 0%, #FFF0E6 50%, #b08d55 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
             
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             opacity: 0;
-            /* Combined entrance and shimmer animation */
-            animation: fadeUp 1s ease-out forwards 0.3s, shimmer 8s linear infinite;
+            animation: fadeUp 1s ease-out forwards 0.3s, shimmer 6s linear infinite;
         }
 
-        .tagline {
+        .subtitle {
             font-family: 'Berkshire Swash', cursive;
             color: #dcbfa6; 
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
-            max-width: 700px;
+            font-size: clamp(1.2rem, 3vw, 2rem);
             margin-bottom: 30px;
-            line-height: 1.4;
             opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.6s;
+            animation: fadeUp 1s ease-out forwards 0.5s;
         }
 
-        .description {
-            font-family: 'Lato', sans-serif;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto 50px auto;
-            font-size: 1rem;
+        /* "Notify Me" Input Group */
+        .notify-container {
+            max-width: 450px;
+            width: 100%;
+            margin-bottom: 40px;
             opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.9s;
+            animation: fadeUp 1s ease-out forwards 0.8s;
+            position: relative;
+            z-index: 10;
+        }
+
+        .input-group-luxury {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,240,230,0.2);
+            border-radius: 50px;
+            padding: 5px;
+            display: flex;
+            transition: all 0.3s;
+        }
+
+        .input-group-luxury:focus-within {
+            background: rgba(255,255,255,0.1);
+            border-color: #FFF0E6;
+            box-shadow: 0 0 15px rgba(128,0,0,0.5);
+        }
+
+        .input-luxury {
+            background: transparent;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            flex-grow: 1;
+            outline: none;
+            font-family: 'Lato', sans-serif;
+        }
+        
+        .input-luxury::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .btn-luxury-submit {
+            background-color: #800000;
+            color: white;
+            border: none;
+            border-radius: 50px;
+            padding: 10px 25px;
+            font-family: 'Cinzel', serif;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-luxury-submit:hover {
+            background-color: #a00000;
+            box-shadow: 0 0 10px #800000;
         }
 
         /* Location Button */
@@ -164,13 +207,13 @@
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: rgba(255, 255, 255, 0.08);
+            background: transparent;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 25px;
+            padding: 8px 20px;
             border-radius: 50px;
-            font-size: 0.9rem;
-            color: #FFF0E6;
-            margin-bottom: 40px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 30px;
             text-decoration: none;
             transition: all 0.3s ease;
             opacity: 0;
@@ -178,45 +221,30 @@
         }
         
         .location-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
             border-color: #FFF0E6;
-            transform: translateY(-2px);
-            color: white;
-            box-shadow: 0 0 15px rgba(255, 240, 230, 0.2);
+            color: #FFF0E6;
         }
 
         /* Contact Area */
         .contact-strip {
             display: flex;
             gap: 20px;
-            flex-wrap: wrap;
             justify-content: center;
             opacity: 0;
             animation: fadeIn 1s ease-out forwards 1.5s;
         }
 
         .contact-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #FFF0E6;
-            border: 1px solid rgba(128, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            text-decoration: none;
+            font-size: 1.5rem;
+            color: rgba(255,255,255,0.6);
+            transition: 0.3s;
         }
-
         .contact-icon:hover {
-            background: #800000;
-            transform: translateY(-5px) scale(1.1);
-            color: white;
-            box-shadow: 0 5px 15px rgba(128,0,0,0.6);
+            color: #FFF0E6;
+            transform: scale(1.1);
         }
 
-        /* --- ANIMATION KEYFRAMES --- */
+        /* --- ANIMATIONS --- */
         @keyframes fadeUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -224,14 +252,13 @@
         @keyframes fadeIn {
             to { opacity: 1; }
         }
-        /* New: Background Drift */
         @keyframes bgDrift {
             0% { transform: translate(0, 0); }
             100% { transform: translate(50px, 50px); }
         }
-        /* New: Text Shimmer */
         @keyframes shimmer {
-            to { background-position: 200% center; }
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
         }
 
     </style>
@@ -243,23 +270,26 @@
             <img src="logo/logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/45/800000/FFF0E6?text=D'">
             <div>
                 <h1 class="brand-font m-0 fs-4 text-white lh-1">DASHAMI SILK</h1>
-                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2000</small>
+                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2025</small>
             </div>
         </a>
     </header>
 
     <section class="hero-section">
         
-        <h1 class="main-title">WEAVING<br>TRADITION</h1>
+        <h1 class="coming-soon-title">COMING<br>SOON</h1>
         
-        <p class="tagline">
-            "Born from a passion for timeless beauty rituals."
-        </p>
+        <p class="subtitle">Weaving Tradition & Elegance</p>
 
-        <p class="description">
-            We weave tradition into every thread, honoring heritage while embracing modern elegance. 
-            Our upcoming collection is handpicked to ensure the highest quality of silk and craftsmanship.
-        </p>
+        <div class="notify-container">
+            <form onsubmit="event.preventDefault();" class="input-group-luxury">
+                <input type="email" class="input-luxury" placeholder="Enter your email for updates..." required>
+                <button type="submit" class="btn-luxury-submit">Notify Me</button>
+            </form>
+            <div class="text-center mt-2">
+                <small class="text-white-50" style="font-size: 0.75rem;">Be the first to know when we launch.</small>
+            </div>
+        </div>
 
         <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+Sarees+Nelamangala+Weavers+Colony" target="_blank" class="location-btn">
             <i class="fa-solid fa-map-location-dot text-danger"></i>
@@ -268,10 +298,10 @@
 
         <div class="contact-strip">
             <a href="https://wa.me/918904528959" target="_blank" class="contact-icon" title="WhatsApp">
-                <i class="fa-brands fa-whatsapp fa-lg"></i>
+                <i class="fa-brands fa-whatsapp"></i>
             </a>
             <a href="https://www.instagram.com/dashami_silk" target="_blank" class="contact-icon" title="Instagram">
-                <i class="fa-brands fa-instagram fa-lg"></i>
+                <i class="fa-brands fa-instagram"></i>
             </a>
         </div>
 
