@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Coming Soon | Dashami Silk</title>
+    <title>Under Maintenance | Dashami Silk</title>
     <link rel="icon" type="image/png" href="logo/logo-circle.png">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -73,7 +73,6 @@
         .brand-font { font-family: 'Cinzel', serif; }
         .accent-font { font-family: 'Berkshire Swash', cursive; }
 
-        /* Header Logo Area */
         .header-brand-area {
             display: flex;
             align-items: center;
@@ -103,7 +102,7 @@
             overflow: hidden;
         }
 
-        /* Animated Background Texture */
+        /* Background Drift */
         .hero-section::before {
             content: "";
             position: absolute;
@@ -114,128 +113,90 @@
             animation: bgDrift 60s linear infinite alternate;
         }
 
-        /* "Coming Soon" styling */
-        .coming-soon-title {
+        /* Maintenance Title */
+        .maintenance-title {
             font-family: 'Cinzel', serif;
-            font-size: clamp(3rem, 9vw, 6.5rem); /* HUGE FONT */
+            font-size: clamp(3rem, 8vw, 6rem);
             font-weight: 800;
             line-height: 1.1;
-            letter-spacing: 2px;
-            
             /* Shimmer Gradient */
             background: linear-gradient(to right, #b08d55 0%, #FFF0E6 50%, #b08d55 100%);
             background-size: 200% auto;
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            
-            margin-bottom: 10px;
+            margin-bottom: 20px;
             opacity: 0;
             animation: fadeUp 1s ease-out forwards 0.3s, shimmer 6s linear infinite;
         }
 
         .subtitle {
-            font-family: 'Berkshire Swash', cursive;
-            color: #dcbfa6; 
-            font-size: clamp(1.2rem, 3vw, 2rem);
-            margin-bottom: 30px;
+            font-family: 'Lato', sans-serif;
+            color: rgba(255,255,255,0.8);
+            font-size: clamp(1rem, 2vw, 1.3rem);
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
             opacity: 0;
             animation: fadeUp 1s ease-out forwards 0.5s;
         }
 
-        /* "Notify Me" Input Group */
-        .notify-container {
-            max-width: 450px;
-            width: 100%;
+        /* Loader Ring */
+        .loader-ring {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 240, 230, 0.1);
+            border-top: 3px solid #FFF0E6; 
+            border-radius: 50%;
             margin-bottom: 40px;
+            animation: spin 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55) infinite;
+            box-shadow: 0 0 20px rgba(128, 0, 0, 0.5);
             opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.8s;
-            position: relative;
-            z-index: 10;
+            animation: fadeIn 1s ease-out 0.8s forwards, spin 2s linear infinite;
         }
 
-        .input-group-luxury {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,240,230,0.2);
-            border-radius: 50px;
-            padding: 5px;
-            display: flex;
-            transition: all 0.3s;
-        }
-
-        .input-group-luxury:focus-within {
-            background: rgba(255,255,255,0.1);
-            border-color: #FFF0E6;
-            box-shadow: 0 0 15px rgba(128,0,0,0.5);
-        }
-
-        .input-luxury {
-            background: transparent;
-            border: none;
-            color: white;
-            padding: 10px 20px;
-            flex-grow: 1;
-            outline: none;
-            font-family: 'Lato', sans-serif;
-        }
-        
-        .input-luxury::placeholder {
-            color: rgba(255,255,255,0.5);
-        }
-
-        .btn-luxury-submit {
-            background-color: #800000;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            padding: 10px 25px;
-            font-family: 'Cinzel', serif;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        .btn-luxury-submit:hover {
-            background-color: #a00000;
-            box-shadow: 0 0 10px #800000;
-        }
-
-        /* Location Button */
+        /* Location Link */
         .location-btn {
             display: inline-flex;
             align-items: center;
             gap: 10px;
-            background: transparent;
+            background: rgba(255,255,255,0.05);
             border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 20px;
+            padding: 10px 25px;
             border-radius: 50px;
-            font-size: 0.85rem;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 30px;
+            font-size: 0.9rem;
+            color: #FFF0E6;
+            margin-bottom: 40px;
             text-decoration: none;
             transition: all 0.3s ease;
             opacity: 0;
             animation: fadeIn 1s ease-out forwards 1.2s;
         }
-        
         .location-btn:hover {
             border-color: #FFF0E6;
-            color: #FFF0E6;
+            background: rgba(255,255,255,0.1);
         }
 
-        /* Contact Area */
+        /* Contact Label */
+        .contact-label {
+            font-family: 'Berkshire Swash', cursive;
+            color: #dcbfa6;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeIn 1s ease-out forwards 1.4s;
+        }
+
+        /* Contact Strip */
         .contact-strip {
             display: flex;
-            gap: 20px;
+            gap: 25px;
             justify-content: center;
             opacity: 0;
             animation: fadeIn 1s ease-out forwards 1.5s;
         }
-
         .contact-icon {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             color: rgba(255,255,255,0.6);
             transition: 0.3s;
         }
@@ -244,7 +205,7 @@
             transform: scale(1.1);
         }
 
-        /* --- ANIMATIONS --- */
+        /* Animations */
         @keyframes fadeUp {
             from { transform: translateY(30px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
@@ -260,6 +221,10 @@
             0% { background-position: -200% center; }
             100% { background-position: 200% center; }
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
 
     </style>
 </head>
@@ -270,39 +235,37 @@
             <img src="logo/logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/45/800000/FFF0E6?text=D'">
             <div>
                 <h1 class="brand-font m-0 fs-4 text-white lh-1">DASHAMI SILK</h1>
-                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2025</small>
+                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2000</small>
             </div>
         </a>
     </header>
 
     <section class="hero-section">
         
-        <h1 class="coming-soon-title">COMING<br>SOON</h1>
-        
-        <p class="subtitle">Weaving Tradition & Elegance</p>
+        <div class="loader-ring"></div>
 
-        <div class="notify-container">
-            <form onsubmit="event.preventDefault();" class="input-group-luxury">
-                <input type="email" class="input-luxury" placeholder="Enter your email for updates..." required>
-                <button type="submit" class="btn-luxury-submit">Notify Me</button>
-            </form>
-            <div class="text-center mt-2">
-                <small class="text-white-50" style="font-size: 0.75rem;">Be the first to know when we launch.</small>
-            </div>
-        </div>
+        <h1 class="maintenance-title">WE'LL BE<br>BACK SOON</h1>
+        
+        <p class="subtitle">
+            We are currently making some changes to enhance your experience.<br>
+            Please check back shortly.
+        </p>
 
         <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+Sarees+Nelamangala+Weavers+Colony" target="_blank" class="location-btn">
             <i class="fa-solid fa-map-location-dot text-danger"></i>
-            <span>Locate Us in Nelamangala</span>
+            <span>Visit Store in Nelamangala</span>
         </a>
 
+        <p class="contact-label">You can contact us at</p>
+
         <div class="contact-strip">
-            <a href="https://wa.me/918904528959" target="_blank" class="contact-icon" title="WhatsApp">
+            <a href="https://wa.me/918904528959" target="_blank" class="contact-icon" title="Chat on WhatsApp">
                 <i class="fa-brands fa-whatsapp"></i>
             </a>
-            <a href="https://www.instagram.com/dashami_silk" target="_blank" class="contact-icon" title="Instagram">
+            <a href="https://www.instagram.com/dashami_silk" target="_blank" class="contact-icon" title="Visit Instagram">
                 <i class="fa-brands fa-instagram"></i>
             </a>
+            
         </div>
 
     </section>
