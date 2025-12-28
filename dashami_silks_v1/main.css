@@ -181,8 +181,58 @@ footer { background: var(--primary); border-top: 4px solid rgba(0,0,0,0.1); }
     -webkit-backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow: 0 8px 32px rgba(0,0,0,0.15);
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); /* Smooth morphing */
-    z-index: 1050;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    
+    /* UPDATED Z-INDEX: Lowered to 1020 so Side Menu (1045) sits on top */
+    z-index: 1020; 
+}
+
+/* 2. MOBILE & TABLET PORTRAIT (< 992px) */
+@media (max-width: 991px) {
+    #floating-header {
+        top: 0 !important;
+        left: 0 !important;
+        width: 100% !important;
+        border-radius: 0 0 20px 20px; /* Slight curve at bottom only */
+    }
+}
+
+/* 3. DESKTOP & LANDSCAPE (> 992px) */
+@media (min-width: 992px) {
+    #floating-header {
+        top: clamp(10px, 2vh, 20px) !important; 
+        width: clamp(600px, 92vw, 1200px) !important;
+        left: 50% !important;
+        transform: translateX(-50%);
+        right: auto !important;
+        
+        border-radius: 50px;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        background: rgba(128, 0, 0, 0.9) !important;
+    }
+
+    #filterPanel {
+        border-top: 1px solid rgba(255,255,255,0.1);
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+}
+
+/* 4. ULTRAWIDE SCREENS (> 1600px) */
+@media (min-width: 1600px) {
+    #floating-header {
+        width: 1300px !important;
+    }
+}
+
+/* 5. VISIBILITY FIXES inside Maroon Header */
+#filterPanel .btn-outline-light:hover,
+#filterPanel .btn-check:checked + .btn-outline-light {
+    color: #800000;
+    background-color: white;
+    border-color: white;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(255,255,255,0.5);
 }
 
 /* 2. MOBILE & TABLET PORTRAIT (< 992px) */

@@ -6,13 +6,23 @@
     --nav-bg: #E0E0E0;
 }
 
-body { background-color: var(--bg); font-family: 'Lato', sans-serif; display: flex; flex-direction: column; min-height: 100vh; -webkit-tap-highlight-color: transparent; }
+/* Updated Body Padding for Floating Header */
+body { 
+    background-color: var(--bg); 
+    font-family: 'Lato', sans-serif; 
+    display: flex; 
+    flex-direction: column; 
+    min-height: 100vh; 
+    -webkit-tap-highlight-color: transparent;
+    padding-top: clamp(90px, 14vh, 150px) !important; /* Pushes content down */
+}
 
-/* FONTS & HEADER */
+/* FONTS */
 .brand-font { font-family: 'Berkshire Swash', cursive; }
 .brand-text h1 { font-family: 'Berkshire Swash', cursive; font-size: 1.6rem; letter-spacing: 1px; font-weight: normal; margin: 0; line-height: 1; }
 .brand-text small { font-family: 'Cinzel', serif; font-weight: 600; letter-spacing: 1px; font-size: 0.65rem; }
-header { background: var(--primary); }
+
+/* The Header style is now handled by main.css (via #floating-header), so we remove the generic header background here */
 .logo { width: 45px; height: 45px; border-radius: 50%; border: 2px solid white; object-fit: cover; background: white; }
 
 /* FOOTER */
@@ -48,7 +58,7 @@ footer { background: var(--primary); border-top: 4px solid rgba(0,0,0,0.1); }
     object-fit: contain; 
     cursor: zoom-in; 
     padding: 10px;
-    opacity: 1; /* Removed !important to allow error class to work */
+    opacity: 1; 
     transition: opacity 0.2s ease-in-out; 
 }
 
