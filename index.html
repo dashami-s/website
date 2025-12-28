@@ -2,259 +2,174 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Coming Soon | Dashami Silk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashami Silk | Indian Saree Collection</title>
     <link rel="icon" type="image/png" href="logo/logo-circle.png">
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@600&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@600&display=swap" rel="stylesheet">
 
     <style>
-        /* =========================================
-           SMART ADAPTIVE HEADER
-           ========================================= */
-        #floating-header {
-            background: rgba(128, 0, 0, 0.95); /* Deep Maroon */
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 240, 230, 0.1);
-            box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
-            
-            position: fixed;
-            display: flex;
-            align-items: center;
-            /* Center the content since buttons are removed */
-            justify-content: center; 
-            padding: 15px 30px;
-            box-sizing: border-box;
-            z-index: 1020;
-        }
-
-        /* MOBILE & TABLET PORTRAIT (< 992px) */
-        @media (max-width: 991px) {
-            #floating-header {
-                top: 0 !important;
-                left: 0 !important;
-                width: 100% !important;
-                border-radius: 0 0 20px 20px;
-                padding-bottom: 20px;
-            }
-        }
-
-        /* DESKTOP & LANDSCAPE (> 992px) */
-        @media (min-width: 992px) {
-            #floating-header {
-                top: clamp(10px, 2vh, 20px) !important;
-                /* Adjusted width for just the logo */
-                width: auto !important;
-                min-width: 300px;
-                left: 50% !important;
-                transform: translateX(-50%);
-                right: auto !important;
-                
-                border-radius: 50px;
-                border: 1px solid rgba(255, 255, 255, 0.15);
-                background: rgba(128, 0, 0, 0.9) !important;
-            }
-        }
-
-        /* =========================================
-           PAGE STYLING (Dark Luxury Theme)
-           ========================================= */
-        body, html {
-            height: 100%;
-            margin: 0;
-            font-family: 'Lato', sans-serif;
-            background-color: #050000;
-            color: white;
-            overflow-x: hidden;
-        }
-
-        .brand-font { font-family: 'Cinzel', serif; }
-        .accent-font { font-family: 'Berkshire Swash', cursive; }
-
-        /* Header Logo Area */
-        .header-brand-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            text-decoration: none;
-            color: white;
-        }
-        .header-logo {
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            border: 2px solid #FFF0E6;
-            object-fit: cover;
-        }
-
-        /* Hero Section */
-        .hero-section {
-            min-height: 100vh;
+        body {
+            font-family: 'Georgia', serif;
+            background-color: #FFF0E6; /* Brand Peach */
             display: flex;
             flex-direction: column;
+            align-items: center;
             justify-content: center;
-            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #800000; /* Brand Maroon */
             text-align: center;
-            background: radial-gradient(circle at 50% 50%, #5e0000 0%, #000000 90%);
-            padding: 100px 20px 40px 20px;
-            position: relative;
         }
 
-        .hero-section::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23FFF0E6' fill-opacity='0.03' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
-            opacity: 0.5;
-            pointer-events: none;
-        }
-
-        .main-title {
-            font-family: 'Cinzel', serif;
-            font-size: clamp(2.5rem, 6vw, 5rem);
-            font-weight: 600;
-            color: #FFF0E6;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.3s;
-        }
-
-        .tagline {
-            font-family: 'Berkshire Swash', cursive;
-            color: #dcbfa6; 
-            font-size: clamp(1.2rem, 2vw, 1.8rem);
-            max-width: 700px;
+        /* LOGO & BRANDING */
+        .brand-container {
             margin-bottom: 30px;
-            line-height: 1.4;
-            opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.6s;
-        }
-
-        .description {
-            font-family: 'Lato', sans-serif;
-            color: rgba(255, 255, 255, 0.7);
-            max-width: 600px;
-            margin: 0 auto 50px auto;
-            font-size: 1rem;
-            opacity: 0;
-            animation: fadeUp 1s ease-out forwards 0.9s;
-        }
-
-        /* Location Button */
-        .location-btn {
-            display: inline-flex;
+            animation: fadeIn 1s ease-in;
+            display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 10px;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 10px 25px;
-            border-radius: 50px;
-            font-size: 0.9rem;
-            color: #FFF0E6;
-            margin-bottom: 40px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards 1.2s;
+        }
+        .brand-logo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid #800000;
+            object-fit: cover;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            margin-bottom: 10px;
         }
         
-        .location-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #FFF0E6;
-            transform: translateY(-2px);
-            color: white;
+        .brand-name {
+            font-family: 'Berkshire Swash', cursive;
+            font-size: 2.2rem;
+            margin: 0;
+            font-weight: normal;
+            letter-spacing: 1px;
+            line-height: 1.1;
         }
 
-        /* Contact Area */
-        .contact-strip {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            opacity: 0;
-            animation: fadeIn 1s ease-out forwards 1.5s;
+        .brand-tagline {
+            font-family: 'Cinzel', serif;
+            font-weight: 600;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-top: 5px;
+            opacity: 0.9;
         }
 
-        .contact-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: rgba(255,255,255,0.05);
+        /* SPINNER */
+        .loader-container {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            margin-bottom: 20px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFF0E6;
-            border: 1px solid rgba(128, 0, 0, 0.5);
-            transition: all 0.3s ease;
-            text-decoration: none;
         }
+        .loader {
+            position: absolute;
+            top: 0; left: 0;
+            border: 5px solid rgba(128, 0, 0, 0.1);
+            border-top: 5px solid #800000;
+            border-radius: 50%;
+            width: 100%;
+            height: 100%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .contact-icon:hover {
-            background: #800000;
-            transform: translateY(-5px);
+        h3 { margin: 10px 0 5px; }
+        #status-msg { margin-top: 5px; font-size: 0.95rem; opacity: 0.8; }
+
+        /* BUTTON STYLE (Hidden by default, shown on error) */
+        .manual-btn {
+            margin-top: 25px;
+            padding: 12px 25px;
+            background-color: #25D366; /* WhatsApp Green */
             color: white;
-            box-shadow: 0 5px 15px rgba(128,0,0,0.4);
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            display: none; 
+            font-size: 1rem;
+            text-decoration: none;
+            font-family: sans-serif;
+            font-weight: bold;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.2s;
         }
-
-        @keyframes fadeUp {
-            from { transform: translateY(30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @keyframes fadeIn {
-            to { opacity: 1; }
-        }
+        .manual-btn:hover { transform: scale(1.05); background-color: #1ebc57; }
 
     </style>
 </head>
 <body>
 
-    <header id="floating-header">
-        <a href="#" class="header-brand-area">
-            <img src="logo/logo.png" alt="Logo" class="header-logo" onerror="this.src='https://via.placeholder.com/45/800000/FFF0E6?text=D'">
-            <div>
-                <h1 class="brand-font m-0 fs-4 text-white lh-1">DASHAMI SILK</h1>
-                <small class="text-white-50" style="font-size: 0.65rem; letter-spacing: 2px;">EST. 2025</small>
-            </div>
-        </a>
-    </header>
+    <div class="brand-container">
+        <img src="logo/logo.png" alt="Dashami Silk" class="brand-logo" onerror="this.src='product_images/logo_circle.png'">
+        <h1 class="brand-name">Dashami Silk</h1>
+        <p class="brand-tagline">Indian Saree Collection</p>
+    </div>
 
-    <section class="hero-section">
-        
-        <h1 class="main-title">WEAVING<br>TRADITION</h1>
-        
-        <p class="tagline">
-            "Born from a passion for timeless beauty rituals."
-        </p>
+    <div class="loader-container" id="spinner-box">
+        <div class="loader"></div>
+    </div>
 
-        <p class="description">
-            We weave tradition into every thread, honoring heritage while embracing modern elegance. 
-            Our upcoming collection is handpicked to ensure the highest quality of silk and craftsmanship.
-        </p>
+    <h3 id="main-heading">Redirecting to the latest collection...</h3>
+    <div id="status-msg">Checking shop version...</div>
+    
+    <!-- Contact Button (Populated by JS on error) -->
+    <a id="error-contact-btn" href="#" class="manual-btn">
+        <span style="margin-right:8px;">&#128222;</span> Contact Support on WhatsApp
+    </a>
+    
+    <script>
+        // 1. Minimum wait time promise (3 seconds)
+        const minWaitPromise = new Promise(resolve => setTimeout(resolve, 3000));
 
-        <a href="https://www.google.com/maps/search/?api=1&query=Dashami+Silk+Sarees+Nelamangala+Weavers+Colony" target="_blank" class="location-btn">
-            <i class="fa-solid fa-map-location-dot text-danger"></i>
-            <span>Locate Us in Nelamangala</span>
-        </a>
+        // 2. Data fetch promise
+        const dataPromise = fetch('version.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Configuration file missing.");
+                }
+                return response.json();
+            });
 
-        <div class="contact-strip">
-            <a href="https://wa.me/918904528959" target="_blank" class="contact-icon" title="WhatsApp">
-                <i class="fa-brands fa-whatsapp"></i>
-            </a>
-            <a href="https://www.instagram.com/dashami_silk" target="_blank" class="contact-icon" title="Instagram">
-                <i class="fa-brands fa-instagram"></i>
-            </a>
-
-    </section>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
+        // 3. Wait for BOTH to complete before redirecting
+        Promise.all([minWaitPromise, dataPromise])
+            .then(([_, data]) => {
+                if (data.current_version) {
+                    document.getElementById('status-msg').innerText = "Version found: " + data.current_version;
+                    // Perform the redirect to the versioned folder
+                    window.location.href = "./" + data.current_version + "/main.html";
+                } else {
+                    throw new Error("Invalid version data.");
+                }
+            })
+            .catch(e => {
+                console.error(e);
+                
+                // 1. Hide Spinner
+                document.getElementById('spinner-box').style.display = 'none';
+                
+                // 2. Update Text
+                document.getElementById('main-heading').innerText = "Unable to Connect";
+                document.getElementById('status-msg').innerHTML = "Error finding shop version.<br>Please try again later.";
+                document.getElementById('status-msg').style.color = "#d9534f"; // Red color
+                
+                // 3. Show Contact Button
+                const btn = document.getElementById('error-contact-btn');
+                btn.href = "whatsapp://send?phone=918904528959&text=Hi,%20I%20am%20unable%20to%20access%20the%20Dashami%20Silks%20website.";
+                btn.style.display = 'inline-block';
+            });
+    </script>
 </body>
 </html>
