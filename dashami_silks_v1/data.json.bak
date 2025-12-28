@@ -1,0 +1,19 @@
+[
+    {
+        "id": "DS-109",
+        "name": "6hg",
+        "category": "Silk",
+        "fabric": "Pure Silk",
+        "color": "Gfggg",
+        "price": "500",
+        "discount_price": "588",
+        "desc": "Ggdfhjbb",
+        "stars": 5,
+        "stock": "in_stock",
+        "stock_count": 1,
+        "visible": true,
+        "image": "images/DS-109_main.png",
+        "gallery": [],
+        "timestamp": 1766954654
+    }
+]

@@ -2,473 +2,483 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard | Dashami Silk</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Dashami Admin</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { brand: ['"Berkshire Swash"','cursive'], accent: ['"Cinzel"','serif'], body: ['Georgia','serif'] },
+                    colors: { peach: '#FFF0E6', maroon: { DEFAULT: '#800000', light: '#a31b1b', dark: '#5a0000' }, cream: '#FFFCF9' },
+                    boxShadow: { 'classic': '0 4px 20px rgba(128, 0, 0, 0.08)' }
+                }
+            }
+        }
+    </script>
     <style>
-        :root {
-            --primary: #800000;
-            --primary-light: #a33333;
-            --bg-color: #f8f5f2;
-            --card-bg: #ffffff;
-            --text-main: #2c2c2c;
-            --text-muted: #888;
-            --accent-gold: #c5a059;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            font-family: 'Poppins', sans-serif;
-            padding-top: 100px;
-            color: var(--text-main);
-        }
-
-        /* --- HEADER --- */
-        #floating-header {
-            background: rgba(128, 0, 0, 0.95) !important;
-            backdrop-filter: blur(10px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            box-shadow: 0 4px 20px rgba(128, 0, 0, 0.2);
-        }
-        .brand-font { font-family: 'Berkshire Swash', cursive; }
-
-        /* --- CARDS & LAYOUT --- */
-        .glass-card {
-            background: var(--card-bg);
-            border: none;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.04);
-            transition: transform 0.3s ease;
-            overflow: hidden;
-        }
-        .section-header {
-            background: linear-gradient(to right, #fff0e6, #fff);
-            padding: 15px 25px;
-            border-left: 5px solid var(--primary);
-            font-weight: 600;
-            color: var(--primary);
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            font-size: 0.85rem;
-        }
-
-        /* --- UPLOAD ZONES --- */
-        .upload-zone {
-            border: 2px dashed #e0e0e0;
-            border-radius: 15px;
-            background: #fafafa;
-            padding: 30px 20px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-        .upload-zone:hover {
-            border-color: var(--primary);
-            background: #fff5f5;
-            transform: translateY(-2px);
-        }
-        .upload-icon {
-            font-size: 2.5rem;
-            color: #ddd;
-            margin-bottom: 10px;
-            transition: color 0.3s;
-        }
-        .upload-zone:hover .upload-icon { color: var(--primary); }
-        .upload-text { font-size: 0.8rem; font-weight: 600; color: #666; }
-
-        /* --- PREVIEWS --- */
-        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
-        .media-item {
-            aspect-ratio: 1; border-radius: 10px; overflow: hidden;
-            position: relative; background: #000;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            border: 1px solid #eee;
-        }
-        .media-item img { width: 100%; height: 100%; object-fit: contain; background: #fff; }
-        .btn-rotate {
-            position: absolute; bottom: 5px; right: 5px;
-            background: rgba(128, 0, 0, 0.8); color: white;
-            border: none; border-radius: 50%; width: 25px; height: 25px;
-            font-size: 0.7rem; display: flex; align-items: center; justify-content: center;
-            backdrop-filter: blur(2px); transition: 0.2s;
-        }
-        .btn-rotate:hover { background: #fff; color: var(--primary); }
-
-        /* --- FORM INPUTS --- */
-        .form-floating > .form-control, .form-floating > .form-select {
-            border: 1px solid #eee;
-            border-radius: 12px;
-            background: #fdfdfd;
-        }
-        .form-floating > .form-control:focus, .form-floating > .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(128, 0, 0, 0.1);
-        }
-        .form-floating > label { color: #999; font-size: 0.9rem; }
-
-        /* --- STOCK SWITCH --- */
-        .stock-switch {
-            display: flex; background: #eee; border-radius: 30px; padding: 4px;
-            position: relative; cursor: pointer; user-select: none;
-        }
-        .stock-option {
-            flex: 1; text-align: center; padding: 8px; z-index: 2;
-            font-size: 0.8rem; font-weight: 700; transition: color 0.3s;
-            border-radius: 25px;
-        }
-        .stock-option.active { color: white; background: var(--primary); box-shadow: 0 2px 10px rgba(128,0,0,0.3); }
-
-        /* --- ACTION BUTTON --- */
-        .btn-save {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border: none; color: white; font-weight: 600;
-            border-radius: 50px; padding: 15px;
-            letter-spacing: 1px; box-shadow: 0 10px 20px rgba(128, 0, 0, 0.2);
-            transition: all 0.3s;
-        }
-        .btn-save:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(128, 0, 0, 0.3);
-        }
-        .btn-save:disabled { background: #ccc; transform: none; box-shadow: none; }
-
-        /* --- STATUS --- */
-        .status-badge {
-            background: rgba(255,255,255,0.1);
-            padding: 5px 15px; border-radius: 20px;
-            font-size: 0.75rem; border: 1px solid rgba(255,255,255,0.2);
-        }
-        .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 6px; }
-        .online { background-color: #4ade80; box-shadow: 0 0 8px #4ade80; }
-        .offline { background-color: #f87171; }
-
+        body { -webkit-tap-highlight-color: transparent; background-color: #FFF0E6; font-family: 'Georgia', serif; color: #5a0000; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .loader { width: 20px; height: 20px; border: 2px solid rgba(128,0,0,0.1); border-top: 2px solid #800000; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .input-vintage { background-color: #FFFFFF; border: 1px solid #E6D0C5; border-radius: 4px; transition: all 0.2s ease; font-family: 'Georgia', serif; }
+        .input-vintage:focus { border-color: #800000; box-shadow: 0 0 0 1px rgba(128,0,0,0.1); outline: none; }
+        .input-error { border-color: #EF4444 !important; background-color: #FEF2F2 !important; }
+        
+        .filter-chip { padding: 4px 12px; border-radius: 20px; border: 1px solid #E6D0C5; font-size: 10px; font-family: 'Cinzel', serif; font-weight: 700; color: #800000; opacity: 0.6; transition: 0.2s; }
+        .filter-chip.active { background: #800000; color: #fff; opacity: 1; border-color: #800000; }
+        .filter-chip.active-draft { background: #F59E0B; color: #fff; opacity: 1; border-color: #F59E0B; }
+        .filter-chip.active-trash { background: #DC2626; color: #fff; opacity: 1; border-color: #DC2626; }
     </style>
 </head>
-<body>
+<body class="pb-32 antialiased">
 
-<header id="floating-header" class="fixed-top">
-    <div class="container-fluid px-4 py-3">
-        <div class="d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center gap-3">
-                <img src="logo/logo.png" class="rounded-circle border border-2 border-white" width="45" height="45">
+    <header class="fixed top-0 inset-x-0 z-50 bg-[#FFF0E6]/95 backdrop-blur-sm border-b border-[#E6D0C5]">
+        <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full border-2 border-maroon p-0.5 bg-white shadow-sm overflow-hidden flex-shrink-0">
+                    <img src="logo/logo.png" onerror="this.src='https://placehold.co/40x40/800000/FFF?text=D'" class="w-full h-full object-cover rounded-full">
+                </div>
                 <div>
-                    <h5 class="m-0 text-white brand-font" style="letter-spacing: 0.5px;">Dashami Admin</h5>
-                    <div class="status-badge text-white">
-                        <span id="statusDot" class="status-dot offline"></span> <span id="statusText">CONNECTING...</span>
+                    <h1 class="font-brand text-xl text-maroon leading-none">Dashami Silk</h1>
+                    <div class="flex items-center gap-1.5 mt-0.5">
+                        <span id="statusDot" class="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
+                        <span id="statusText" class="text-[9px] font-accent font-bold text-maroon/60 tracking-widest uppercase">CONNECTING...</span>
                     </div>
                 </div>
             </div>
-            <a href="main.html" class="btn btn-light btn-sm rounded-pill px-4 fw-bold" style="color: var(--primary);">
-                View Shop <i class="fa-solid fa-arrow-up-right-from-square ms-2"></i>
-            </a>
+            <div class="flex gap-4">
+                <button id="btn-list" onclick="switchView('list')" class="text-xs font-accent font-bold tracking-widest uppercase py-1 border-b-2 border-maroon">Inventory</button>
+                <button id="btn-add" onclick="switchView('add')" class="text-xs font-accent font-bold tracking-widest uppercase py-1 border-b-2 border-transparent opacity-60">Add New</button>
+            </div>
         </div>
-    </div>
-</header>
+    </header>
 
-<div class="container pb-5">
-    <div id="offlineAlert" class="alert alert-danger border-0 shadow-sm d-none text-center rounded-4 mb-4">
-        <i class="fa-solid fa-server me-2"></i> <strong>Backend Offline.</strong> Please run <code>python backend.py</code>
-    </div>
+    <main class="max-w-7xl mx-auto px-4 md:px-8 pt-24">
 
-    <form id="productForm">
-        <div class="row g-4">
-            
-            <div class="col-lg-4">
-                
-                <div class="glass-card mb-4">
-                    <div class="section-header">1. Hero Image</div>
-                    <div class="p-4">
-                        <div class="upload-zone" onclick="document.getElementById('mainInput').click()">
-                            <i class="fa-solid fa-star upload-icon"></i>
-                            <div class="upload-text">MAIN THUMBNAIL</div>
-                            <small class="text-muted d-block mt-1" style="font-size:0.7rem">Required (1 Image)</small>
-                        </div>
-                        <input type="file" id="mainInput" accept="image/*" class="d-none">
-                        <div id="mainPreview" class="mt-3"></div>
-                    </div>
+        <div id="view-list" class="space-y-6">
+            <div class="sticky top-[75px] z-40 bg-[#FFF0E6]/95 p-2 -mx-2 rounded-lg backdrop-blur-sm space-y-3">
+                <div class="relative flex-grow shadow-classic rounded-lg">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="fa-solid fa-magnifying-glass text-maroon/40 text-sm"></i></div>
+                    <input type="text" id="searchBox" onkeyup="filterProducts()" class="w-full pl-9 pr-4 py-3 bg-white border border-[#E6D0C5] rounded-lg text-sm text-maroon focus:outline-none focus:border-maroon placeholder:text-maroon/30 placeholder:italic" placeholder="Search collection...">
                 </div>
-
-                <div class="glass-card mb-4">
-                    <div class="section-header">2. Gallery & Videos</div>
-                    <div class="p-4">
-                        <div class="upload-zone" onclick="document.getElementById('galleryInput').click()">
-                            <i class="fa-solid fa-layer-group upload-icon"></i>
-                            <div class="upload-text">ADD ANGLES</div>
-                            <small class="text-muted d-block mt-1" style="font-size:0.7rem">Multiple Images / Videos</small>
-                        </div>
-                        <input type="file" id="galleryInput" accept="image/*,video/*" multiple class="d-none">
-                        <div class="media-grid" id="galleryPreview"></div>
-                    </div>
-                </div>
-
-                <div class="glass-card">
-                    <div class="section-header">3. Inventory</div>
-                    <div class="p-4">
-                        <div class="stock-switch" id="stockSwitch">
-                            <div class="stock-option active" onclick="setStock('in_stock', this)">IN STOCK</div>
-                            <div class="stock-option" onclick="setStock('out_of_stock', this)">SOLD OUT</div>
-                        </div>
-                        <input type="hidden" id="pStock" value="in_stock">
-                    </div>
+                <div class="flex gap-2 overflow-x-auto no-scrollbar">
+                    <button class="filter-chip active" id="filter-live" onclick="setMode('live')">Live</button>
+                    <button class="filter-chip" id="filter-unfilled" onclick="setMode('unfilled')"><i class="fa-solid fa-pencil mr-1"></i>Drafts</button>
+                    <button class="filter-chip" id="filter-trash" onclick="setMode('trash')"><i class="fa-solid fa-trash mr-1"></i>Trash</button>
                 </div>
             </div>
+            <div id="inventoryList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 pb-12">
+                <div class="col-span-full py-24 flex flex-col items-center justify-center text-maroon/50">
+                    <span class="loader mb-4"></span><span class="text-xs font-accent tracking-widest">Loading...</span>
+                </div>
+            </div>
+        </div>
 
-            <div class="col-lg-8">
-                <div class="glass-card h-100">
-                    <div class="section-header d-flex justify-content-between align-items-center">
-                        <span>4. Product Details</span>
-                        <div class="d-flex align-items-center gap-2">
-                            <span class="text-muted" style="font-size: 0.75rem;">ID:</span>
-                            <input type="text" id="pId" class="form-control form-control-sm text-center fw-bold border-0 bg-light" style="width: 80px;" readonly>
-                            <button type="button" onclick="fetchNextId()" class="btn btn-sm btn-light rounded-circle"><i class="fa-solid fa-rotate"></i></button>
-                        </div>
-                    </div>
+        <div id="view-add" class="hidden">
+            <div class="flex justify-between items-center mb-4 border-b border-maroon/10 pb-2">
+                <div id="draftBadge" class="hidden flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-maroon/20 shadow-sm">
+                    <span class="animate-pulse w-1.5 h-1.5 rounded-full bg-orange-500"></span>
+                    <span class="text-[10px] font-accent font-bold tracking-widest text-maroon">Restored from Draft</span>
+                </div>
+                <button onclick="discardDraft()" class="ml-auto text-[10px] font-accent font-bold uppercase tracking-widest text-maroon/60 hover:text-red-600 transition-colors flex items-center gap-2">
+                    <span>Discard</span><i class="fa-solid fa-trash-can"></i>
+                </button>
+            </div>
+
+            <form id="productForm" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
+                <div class="lg:col-span-4 space-y-6">
+                    <h3 class="font-accent font-bold text-sm text-maroon border-l-2 border-maroon pl-3 uppercase tracking-wider">Visuals <span class="text-red-500">*</span></h3>
                     
-                    <div class="p-4">
-                        <div class="row g-3">
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control fw-bold" id="pName" placeholder="Name" required>
-                                    <label>Product Title</label>
-                                </div>
-                            </div>
+                    <div id="mainImageZone" class="aspect-square relative w-full bg-white border-2 border-dashed border-[#E6D0C5] hover:border-maroon transition-all cursor-pointer group rounded-lg overflow-hidden" onclick="document.getElementById('mainInput').click()">
+                        <div id="mainPreview" class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon">
+                            <i class="fa-solid fa-camera-retro text-3xl mb-2"></i>
+                            <span class="font-accent text-[10px] font-bold tracking-widest uppercase">Cover Image</span>
+                        </div>
+                        <div id="prog-wrap-main" class="absolute bottom-0 inset-x-0 h-1 bg-gray-100 hidden"><div id="prog-main" class="h-full bg-maroon transition-all duration-300" style="width: 0%"></div></div>
+                    </div>
+                    <input type="file" id="mainInput" accept="image/*" class="hidden">
 
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="pCategory" onchange="toggleCustom(this, 'customCat')">
-                                        <option value="Silk">Silk Saree</option>
-                                        <option value="Cotton">Cotton Saree</option>
-                                        <option value="Banarasi">Banarasi</option>
-                                        <option value="Mysore Silk">Mysore Silk</option>
-                                        <option value="Other">Other...</option>
-                                    </select>
-                                    <label>Category</label>
-                                </div>
-                                <input type="text" class="form-control mt-2 d-none" id="customCat" placeholder="Enter Category Name">
-                            </div>
+                    <div class="bg-white p-4 rounded-lg border border-[#E6D0C5]">
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold text-maroon/70 uppercase">Gallery</span>
+                            <button type="button" onclick="document.getElementById('galleryInput').click()" class="text-xs text-maroon font-bold hover:underline">+ Add</button>
+                        </div>
+                        <input type="file" id="galleryInput" accept="image/*" multiple class="hidden">
+                        <div id="galleryPreview" class="flex gap-2 overflow-x-auto no-scrollbar pb-2 min-h-[50px]"></div>
+                    </div>
+                </div>
 
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select" id="pFabric" onchange="toggleCustom(this, 'customFab')">
-                                        <option value="Pure Silk">Pure Silk</option>
-                                        <option value="Cotton Mix">Cotton Mix</option>
-                                        <option value="Georgette">Georgette</option>
-                                        <option value="Art Silk">Art Silk</option>
-                                        <option value="Other">Other...</option>
-                                    </select>
-                                    <label>Fabric Type</label>
-                                </div>
-                                <input type="text" class="form-control mt-2 d-none" id="customFab" placeholder="Enter Fabric Name">
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="text" class="form-control" id="pColor" placeholder="Color">
-                                    <label>Color</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <select class="form-select text-warning fw-bold" id="pStars">
-                                        <option value="5">★★★★★ (5 Stars)</option>
-                                        <option value="4">★★★★☆ (4 Stars)</option>
-                                        <option value="3">★★★☆☆ (3 Stars)</option>
-                                    </select>
-                                    <label class="text-muted">Quality Rating</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12"><hr class="text-muted opacity-25 my-2"></div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control" id="pPrice" placeholder="Price" required>
-                                    <label>Original MRP (₹)</label>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <div class="form-floating">
-                                    <input type="number" class="form-control border-danger text-danger fw-bold" id="pDiscPrice" placeholder="Disc">
-                                    <label class="text-danger">Selling Price (₹)</label>
-                                </div>
-                            </div>
-
-                            <div class="col-12">
-                                <div class="form-floating">
-                                    <textarea class="form-control" id="pDesc" style="height: 120px" placeholder="Desc"></textarea>
-                                    <label>Product Description</label>
+                <div class="lg:col-span-8 space-y-6">
+                    <h3 class="font-accent font-bold text-sm text-maroon border-l-2 border-maroon pl-3 uppercase tracking-wider">Product Info</h3>
+                    <div class="bg-white p-6 rounded-lg shadow-classic border border-[#E6D0C5]">
+                        <div class="grid grid-cols-12 gap-y-5 gap-x-4">
+                            
+                            <div class="col-span-3 md:col-span-2">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">ID</label>
+                                <div class="relative">
+                                    <input type="text" id="pId" readonly class="w-full bg-gray-50 border border-gray-200 rounded py-2 px-2 text-xs font-mono text-gray-500 focus:outline-none">
+                                    <button type="button" onclick="fetchNextId()" class="absolute right-1 top-1.5 text-maroon hover:text-black"><i class="fa-solid fa-arrows-rotate text-xs"></i></button>
                                 </div>
                             </div>
                             
-                            <div class="col-12 mt-4">
-                                <button type="submit" class="btn-save w-100" id="submitBtn">
-                                    <i class="fa-solid fa-cloud-arrow-up me-2"></i> PUBLISH PRODUCT
-                                </button>
+                            <div class="col-span-9 md:col-span-10">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Title <span class="text-red-500">*</span></label>
+                                <input type="text" id="pName" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-maroon">
+                            </div>
+
+                            <div class="col-span-6 md:col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Category <span class="text-red-500">*</span></label>
+                                <select id="pCategory" onchange="toggleOther('pCategory', 'catOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                    <option value="Silk">Silk</option><option value="Cotton">Cotton</option><option value="Banarasi">Banarasi</option><option value="Mysore Silk">Mysore Silk</option><option value="Other">Other</option>
+                                </select>
+                                <input id="catOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
+                            </div>
+                            
+                            <div class="col-span-6 md:col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Fabric <span class="text-red-500">*</span></label>
+                                <select id="pFabric" onchange="toggleOther('pFabric', 'fabOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                    <option value="Pure Silk">Pure Silk</option><option value="Cotton Mix">Cotton Mix</option><option value="Georgette">Georgette</option><option value="Art Silk">Art Silk</option><option value="Other">Other</option>
+                                </select>
+                                <input id="fabOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
+                            </div>
+
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">MRP <span class="text-red-500">*</span></label>
+                                <input type="number" id="pPrice" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-red-600 uppercase tracking-wider mb-1">Sale</label>
+                                <input type="number" id="pDiscPrice" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-red-700 bg-red-50 border-red-200">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Qty <span class="text-red-500">*</span></label>
+                                <input type="number" id="pStockCount" value="1" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-center">
+                            </div>
+
+                            <div class="col-span-12 md:col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Color <span class="text-red-500">*</span></label>
+                                <input type="text" id="pColor" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm">
+                            </div>
+
+                            <div class="col-span-12">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Description <span class="text-red-500">*</span></label>
+                                <textarea id="pDesc" oninput="debounceSave()" class="input-vintage w-full h-24 py-2 px-3 text-sm leading-relaxed"></textarea>
                             </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+            <div class="h-24"></div>
         </div>
-    </form>
-</div>
+    </main>
 
-<script>
-    const API_URL = "http://localhost:8000";
-    let mainImageObj = null;
-    let galleryImages = [];
-    let isIdFetched = false;
+    <div id="saveContainer" class="fixed bottom-6 inset-x-0 flex justify-center items-center gap-3 z-50 pointer-events-none opacity-0 translate-y-10 transition-all duration-300">
+        <button onclick="saveIncomplete()" class="pointer-events-auto bg-white text-maroon px-5 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg border border-maroon/20 hover:bg-gray-50 flex items-center gap-2 text-xs">
+            <i class="fa-regular fa-clock"></i> Later
+        </button>
+        <button id="saveBtn" onclick="submitProduct()" class="pointer-events-auto bg-maroon text-white px-8 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg flex items-center gap-2 transition-transform active:scale-95 border border-white/20 hover:bg-maroon/90 text-xs">
+            <i class="fa-solid fa-check"></i> Save Product
+        </button>
+    </div>
 
-    // --- UTILS ---
-    function toggleCustom(sel, id) { document.getElementById(id).classList.toggle('d-none', sel.value !== 'Other'); }
-    
-    function setStock(val, el) {
-        document.getElementById('pStock').value = val;
-        document.querySelectorAll('.stock-option').forEach(opt => opt.classList.remove('active'));
-        el.classList.add('active');
-    }
+    <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-maroon text-white px-6 py-3 rounded shadow-xl opacity-0 -translate-y-4 transition-all duration-300 pointer-events-none z-[60] flex items-center gap-3 font-accent text-xs font-bold tracking-wider uppercase border border-white/20">
+        <span id="toastMsg">Notification</span>
+    </div>
 
-    // --- ID FETCH ---
-    async function fetchNextId() {
-        try {
-            const res = await fetch(API_URL + '/api/get-next-id');
-            if(res.ok) {
-                const data = await res.json();
-                document.getElementById('pId').value = data.next_id;
-                isIdFetched = true;
-            }
-        } catch(e){}
-    }
+    <script>
+        const API_URL = ""; 
+        let allProducts = [], uploadedMain = "", uploadedGallery = [], isEditing = false, currentMode = 'live';
+        let saveTimeout;
 
-    // --- CONNECTION CHECKER ---
-    setInterval(async () => {
-        const dot = document.getElementById('statusDot');
-        const txt = document.getElementById('statusText');
-        try {
-            await fetch(API_URL + '/');
-            dot.className = "status-dot online";
-            txt.innerText = "ONLINE";
-            document.getElementById('offlineAlert').classList.add('d-none');
-            document.getElementById('submitBtn').disabled = false;
-            if(!isIdFetched) fetchNextId();
-        } catch (e) {
-            dot.className = "status-dot offline";
-            txt.innerText = "OFFLINE";
-            document.getElementById('offlineAlert').classList.remove('d-none');
-            document.getElementById('submitBtn').disabled = true;
-        }
-    }, 2000);
-
-    // --- MAIN IMAGE ---
-    document.getElementById('mainInput').addEventListener('change', (e) => {
-        const file = e.target.files[0];
-        if(!file) return;
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-            const b64 = evt.target.result.split(',')[1];
-            mainImageObj = { type: 'image', base64: b64, rotation: 0 };
-            document.getElementById('mainPreview').innerHTML = `
-                <div class="media-item w-100">
-                    <img src="${evt.target.result}" id="main-img-prev">
-                    <button class="btn-rotate" type="button" onclick="rotateMain()"><i class="fa-solid fa-rotate-right"></i></button>
-                </div>`;
-        };
-        reader.readAsDataURL(file);
-    });
-
-    function rotateMain() {
-        if(!mainImageObj) return;
-        mainImageObj.rotation = (mainImageObj.rotation + 90) % 360;
-        document.getElementById('main-img-prev').style.transform = `rotate(${mainImageObj.rotation}deg)`;
-    }
-
-    // --- GALLERY ---
-    document.getElementById('galleryInput').addEventListener('change', (e) => {
-        const files = Array.from(e.target.files);
-        const container = document.getElementById('galleryPreview');
-        container.innerHTML = ''; galleryImages = [];
-
-        files.forEach((file, index) => {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-                const b64 = evt.target.result.split(',')[1];
-                const isVideo = file.type.startsWith('video');
-                galleryImages.push({ type: isVideo?'video':'image', base64: b64, rotation: 0 });
+        // --- 1. INIT ---
+        window.onload = async () => {
+            try {
+                updateStatus(false);
+                try { const check = await fetch(API_URL+'/'); if(check.ok) updateStatus(true); } catch(e){}
+                loadInventory();
                 
-                const el = document.createElement('div');
-                el.className = 'media-item';
-                if(isVideo) {
-                    el.innerHTML = `<video src="${evt.target.result}"></video><i class="fa-solid fa-video position-absolute top-0 end-0 m-2 text-white"></i>`;
-                } else {
-                    el.innerHTML = `<img src="${evt.target.result}" id="gal-${index}"><button class="btn-rotate" type="button" onclick="rotGal(${index})"><i class="fa-solid fa-rotate-right"></i></button>`;
-                }
-                container.appendChild(el);
-            };
-            reader.readAsDataURL(file);
+                try {
+                    const res = await fetch(`${API_URL}/api/draft`);
+                    const draft = await res.json();
+                    
+                    // Only restore if draft exists and has content
+                    if(Object.keys(draft).length > 0 && (draft.name || draft.mainImage)) {
+                        if(!isEditing) {
+                            switchView('add');
+                            restoreDraft(draft);
+                        }
+                    } else {
+                        fetchNextId();
+                    }
+                } catch { fetchNextId(); }
+            } catch(e){}
+        };
+
+        function updateStatus(isOnline) {
+            const dot = document.getElementById('statusDot'), txt = document.getElementById('statusText');
+            if(isOnline) { dot.className="w-1.5 h-1.5 rounded-full bg-emerald-500"; txt.innerText="ONLINE"; txt.className="text-[9px] font-accent font-bold text-emerald-700 tracking-widest uppercase"; }
+            else { dot.className="w-1.5 h-1.5 rounded-full bg-red-500"; txt.innerText="OFFLINE"; txt.className="text-[9px] font-accent font-bold text-red-700 tracking-widest uppercase"; }
+        }
+
+        // --- 2. UPLOAD ---
+        async function uploadFile(file, progEl, progWrap) {
+            return new Promise((resolve, reject) => {
+                const formData = new FormData(); formData.append('file', file);
+                const xhr = new XMLHttpRequest(); xhr.open('POST', `${API_URL}/api/upload`, true);
+                if(progWrap) document.getElementById(progWrap).classList.remove('hidden');
+                xhr.upload.onprogress = (e) => { if(progEl) document.getElementById(progEl).style.width = ((e.loaded/e.total)*100)+"%"; };
+                xhr.onload = () => {
+                    if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).url); else reject();
+                    if(progWrap) document.getElementById(progWrap).classList.add('hidden');
+                };
+                xhr.send(formData);
+            });
+        }
+
+        document.getElementById('mainInput').addEventListener('change', async (e) => {
+            if(!e.target.files[0]) return;
+            const url = URL.createObjectURL(e.target.files[0]);
+            document.getElementById('mainPreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
+            document.getElementById('mainImageZone').classList.remove('input-error');
+            try { uploadedMain = await uploadFile(e.target.files[0], 'prog-main', 'prog-wrap-main'); debounceSave(); } catch { showToast("Upload Failed"); }
         });
-    });
 
-    function rotGal(idx) {
-        if(!galleryImages[idx]) return;
-        galleryImages[idx].rotation = (galleryImages[idx].rotation + 90) % 360;
-        document.getElementById(`gal-${idx}`).style.transform = `rotate(${galleryImages[idx].rotation}deg)`;
-    }
+        document.getElementById('galleryInput').addEventListener('change', async (e) => {
+            for (const file of Array.from(e.target.files)) {
+                try { const url = await uploadFile(file); uploadedGallery.push(url); renderGallery(); debounceSave(); } catch {}
+            }
+        });
 
-    // --- SUBMIT ---
-    document.getElementById('productForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const btn = document.getElementById('submitBtn');
-        btn.innerHTML = "<i class='fa-solid fa-spinner fa-spin me-2'></i> PROCESSING...";
-        btn.disabled = true;
+        function renderGallery() {
+            const grid = document.getElementById('galleryPreview'); grid.innerHTML = "";
+            uploadedGallery.forEach((url, i) => {
+                grid.innerHTML += `<div class="relative w-14 h-14 flex-shrink-0 cursor-pointer border border-[#E6D0C5] rounded overflow-hidden hover:border-maroon transition-colors group"><img src="${url}" class="w-full h-full object-cover"><button onclick="removeGallery(${i})" class="absolute inset-0 bg-maroon/50 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><i class="fa-solid fa-xmark text-xs"></i></button></div>`;
+            });
+        }
+        function removeGallery(i) { uploadedGallery.splice(i, 1); renderGallery(); debounceSave(); }
 
-        try {
-            if(!mainImageObj) throw new Error("Main Image is required.");
+        // --- 3. DRAFT ---
+        function debounceSave() { clearTimeout(saveTimeout); saveTimeout = setTimeout(syncDraft, 1000); }
+
+        async function syncDraft() {
+            if(isEditing) return;
+            // Get values safely
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
             
-            let cat = document.getElementById('pCategory').value;
-            if(cat === 'Other') cat = document.getElementById('customCat').value;
-            let fab = document.getElementById('pFabric').value;
-            if(fab === 'Other') fab = document.getElementById('customFab').value;
-
-            const payload = {
-                id: document.getElementById('pId').value,
-                name: document.getElementById('pName').value,
-                stock: document.getElementById('pStock').value,
-                category: cat,
-                fabric: fab,
-                color: document.getElementById('pColor').value,
-                stars: document.getElementById('pStars').value,
-                price: document.getElementById('pPrice').value,
-                discount_price: document.getElementById('pDiscPrice').value,
-                desc: document.getElementById('pDesc').value,
-                mainImage: mainImageObj,
-                mediaGallery: galleryImages
+            const draft = {
+                name: getVal('pName'),
+                cat: getVal('pCategory'), fab: getVal('pFabric'),
+                price: getVal('pPrice'), disc: getVal('pDiscPrice'),
+                color: getVal('pColor'), stock: getVal('pStockCount'),
+                desc: getVal('pDesc'), mainImage: uploadedMain, gallery: uploadedGallery,
+                catOther: getVal('catOther'), fabOther: getVal('fabOther')
             };
+            try { await fetch(`${API_URL}/api/draft`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(draft) });
+            document.getElementById('draftBadge').classList.remove('hidden'); } catch{}
+        }
 
-            const res = await fetch(API_URL + '/api/add-product', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
+        function restoreDraft(draft) {
+            if(!draft) return;
+            
+            // Helper to set value
+            const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ""; };
+            
+            setVal('pName', draft.name);
+            setVal('pPrice', draft.price); setVal('pDiscPrice', draft.disc);
+            setVal('pColor', draft.color); setVal('pStockCount', draft.stock||1);
+            setVal('pDesc', draft.desc);
+            setVal('catOther', draft.catOther); setVal('fabOther', draft.fabOther);
+
+            // Handle Dropdowns with Custom Logic
+            setSelectOrOther('pCategory', 'catOther', draft.cat, ['Silk','Cotton','Banarasi','Mysore Silk']);
+            setSelectOrOther('pFabric', 'fabOther', draft.fab, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
+
+            uploadedMain = draft.mainImage||"";
+            if (uploadedMain) document.getElementById('mainPreview').innerHTML = `<img src="${uploadedMain}" class="w-full h-full object-cover">`;
+            
+            uploadedGallery = draft.gallery||[]; 
+            renderGallery();
+            
+            document.getElementById('draftBadge').classList.remove('hidden');
+            fetchNextId(); // Keep ID fresh
+        }
+
+        async function discardDraft() {
+            if(confirm("Discard?")) {
+                await fetch(`${API_URL}/api/draft`, { method: 'DELETE' });
+                resetForm(); showToast("Draft Cleared");
+            }
+        }
+
+        // --- 4. INVENTORY ---
+        async function loadInventory() {
+            try {
+                const res = await fetch(`${API_URL}/api/products?source=${currentMode}`);
+                allProducts = await res.json();
+                renderList(allProducts);
+            } catch { document.getElementById('inventoryList').innerHTML = `<div class="py-24 text-center text-maroon/50"><span class="text-xs font-accent font-bold uppercase tracking-widest">Network Error</span></div>`; }
+        }
+
+        function renderList(data) {
+            const list = document.getElementById('inventoryList'); list.innerHTML = "";
+            const box = document.getElementById('inventoryList');
+            
+            if(currentMode === 'trash') { list.classList.add('opacity-80'); } 
+            else { list.classList.remove('opacity-80'); }
+
+            if(data.length === 0) { list.innerHTML = `<div class="col-span-full py-24 text-center text-maroon/50"><span class="block font-brand text-xl mb-2">Empty</span></div>`; return; }
+
+            data.forEach(p => {
+                const isStock = p.stock_count > 0;
+                let btns = '';
+
+                if(currentMode === 'live') {
+                    btns = `<div class="flex gap-2"><button class="p-1.5 hover:text-maroon transition-colors" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen text-xs"></i></button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
+                } else if(currentMode === 'unfilled') {
+                    btns = `<div class="flex gap-2"><button class="text-[10px] font-bold text-amber-600 hover:underline uppercase" onclick="editProduct('${p.id}')">Resume</button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
+                } else if(currentMode === 'trash') {
+                    btns = `<div class="flex flex-col items-end gap-2 border-l border-red-200 pl-2 ml-2"><button class="text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="restoreProduct('${p.id}')">Restore</button><button class="text-[9px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="deletePermanent('${p.id}')">Delete Forever</button></div>`;
+                }
+
+                list.innerHTML += `
+                    <div class="bg-white p-3 rounded-xl shadow-classic border ${currentMode==='trash'?'border-red-200 bg-red-50/50':'border-[#E6D0C5]'} flex flex-row items-center gap-3 transition-transform hover:-translate-y-1">
+                        <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-maroon/10 relative">
+                            <img src="${p.image}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x120?text=No+Img'">
+                            ${!isStock && currentMode!=='trash' ? '<div class="absolute inset-0 bg-white/80 flex items-center justify-center"><span class="text-[8px] font-accent font-bold uppercase tracking-widest border border-maroon px-1 py-0.5 text-maroon">Sold Out</span></div>' : ''}
+                        </div>
+                        <div class="flex-grow min-w-0">
+                            <h3 class="font-bold text-maroon truncate leading-tight">${p.name || 'Untitled Draft'}</h3>
+                            <div class="text-[10px] text-maroon/50 font-bold uppercase tracking-wide mb-1">${p.id}</div>
+                            <div class="flex justify-between items-end">
+                                <span class="font-bold text-sm">₹${p.discount_price||p.price}</span>
+                                ${p.stock_count>0 ? `<span class="text-[9px] bg-[#FFF0E6] text-maroon/70 px-1.5 py-0.5 rounded font-bold">Qty:${p.stock_count}</span>`:''}
+                            </div>
+                        </div>
+                        ${btns}
+                    </div>`;
+            });
+        }
+
+        function setMode(mode) {
+            currentMode = mode;
+            document.querySelectorAll('.filter-chip').forEach(el => { el.classList.remove('active', 'active-draft', 'active-trash'); });
+            const activeClass = mode === 'trash' ? 'active-trash' : (mode === 'unfilled' ? 'active-draft' : 'active');
+            document.getElementById(`filter-${mode}`).classList.add(activeClass);
+            loadInventory();
+        }
+
+        // --- 5. VALIDATE & SUBMIT ---
+        async function submitProduct() {
+            let isValid = true;
+            const requiredIds = ['pName', 'pPrice', 'pColor', 'pStockCount', 'pDesc'];
+            
+            if(!uploadedMain) { document.getElementById('mainImageZone').classList.add('input-error'); isValid=false; }
+            else { document.getElementById('mainImageZone').classList.remove('input-error'); }
+
+            requiredIds.forEach(id => {
+                const el = document.getElementById(id);
+                if(!el.value.trim()) { el.classList.add('input-error'); isValid=false; }
+                else el.classList.remove('input-error');
             });
 
-            if(!res.ok) throw new Error("Upload Failed.");
-            
-            alert("Success! Product is live.");
-            location.reload();
+            // Check Dropdowns
+            const checkDropdown = (selId, inpId) => {
+                const sel = document.getElementById(selId);
+                const inp = document.getElementById(inpId);
+                if(sel.value === 'Other' && !inp.value.trim()) { inp.classList.add('input-error'); isValid=false; }
+                else inp.classList.remove('input-error');
+            };
+            checkDropdown('pCategory', 'catOther');
+            checkDropdown('pFabric', 'fabOther');
 
-        } catch (err) {
-            alert(err.message);
-            btn.innerHTML = "TRY AGAIN";
-            btn.disabled = false;
+            if(!isValid) { showToast("Missing Details!"); return; }
+
+            await postData('/api/add-product', "Product Live!");
         }
-    });
-</script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+        async function saveIncomplete() { await postData('/api/save-incomplete', "Saved to Drafts"); }
+
+        async function postData(endpoint, msg) {
+            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
+            
+            let cat = document.getElementById('pCategory').value; if(cat==='Other') cat = document.getElementById('catOther').value;
+            let fab = document.getElementById('pFabric').value; if(fab==='Other') fab = document.getElementById('fabOther').value;
+            const qty = parseInt(document.getElementById('pStockCount').value)||0;
+
+            const payload = {
+                id: document.getElementById('pId').value, name: document.getElementById('pName').value,
+                category: cat, fabric: fab, price: document.getElementById('pPrice').value, discount_price: document.getElementById('pDiscPrice').value,
+                color: document.getElementById('pColor').value, stock: qty>0?'in_stock':'out_of_stock', stock_count: qty,
+                desc: document.getElementById('pDesc').value, mainImage: uploadedMain, gallery: uploadedGallery
+            };
+
+            try {
+                const res = await fetch(`${API_URL}${endpoint}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+                if(res.ok) {
+                    showToast(msg); localStorage.removeItem('dashami_draft'); isEditing = false;
+                    await fetch(`${API_URL}/api/clear-buffer`, { method: 'POST' });
+                    // Go to appropriate list
+                    if(endpoint.includes('save-incomplete')) setMode('unfilled'); else setMode('live');
+                    switchView('list'); resetForm();
+                } else throw new Error();
+            } catch { showToast("Error saving."); }
+            btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Product</span>';
+        }
+
+        // --- UTILS ---
+        async function deleteProduct(id) { if(!confirm("Trash this item?")) return; await fetch(`${API_URL}/api/delete-product`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Trashed"); }
+        async function restoreProduct(id) { await fetch(`${API_URL}/api/restore-product`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Restored"); }
+        async function deletePermanent(id) { if(!confirm("DELETE FOREVER? Cannot undo.")) return; await fetch(`${API_URL}/api/perm-delete`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Deleted"); }
+
+        function editProduct(id) {
+            const p = allProducts.find(x => x.id === id); if(!p) return;
+            isEditing = true; switchView('add');
+            document.getElementById('pId').value = p.id; document.getElementById('pName').value = p.name;
+            document.getElementById('pPrice').value = p.price; document.getElementById('pDiscPrice').value = p.discount_price;
+            document.getElementById('pColor').value = p.color; document.getElementById('pStockCount').value = p.stock_count;
+            document.getElementById('pDesc').value = p.desc;
+            
+            // Logic to select dropdown or show custom input
+            setSelectOrOther('pCategory', 'catOther', p.category, ['Silk','Cotton','Banarasi','Mysore Silk']);
+            setSelectOrOther('pFabric', 'fabOther', p.fabric, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
+
+            uploadedMain = p.image; document.getElementById('mainPreview').innerHTML = `<img src="${p.image}" class="w-full h-full object-cover">`;
+            uploadedGallery = p.gallery||[]; renderGallery();
+            document.getElementById('draftBadge').innerHTML = '<span class="text-[10px] font-bold text-maroon">EDITING</span>';
+            document.getElementById('draftBadge').classList.remove('hidden');
+        }
+
+        function setSelectOrOther(sid, iid, val, opts) {
+            if(opts.includes(val)) { document.getElementById(sid).value=val; document.getElementById(iid).classList.add('hidden'); }
+            else { document.getElementById(sid).value='Other'; document.getElementById(iid).value=val; document.getElementById(iid).classList.remove('hidden'); }
+        }
+
+        function switchView(view) {
+            document.getElementById('view-list').classList.toggle('hidden', view !== 'list'); document.getElementById('view-add').classList.toggle('hidden', view !== 'add');
+            document.getElementById('btn-list').classList.toggle('active', view === 'list'); document.getElementById('btn-add').classList.toggle('active', view === 'add');
+            document.getElementById('btn-list').classList.toggle('border-b-2', view === 'list'); document.getElementById('btn-add').classList.toggle('border-b-2', view === 'add');
+            document.getElementById('btn-list').classList.toggle('border-maroon', view === 'list'); document.getElementById('btn-add').classList.toggle('border-maroon', view === 'add');
+            
+            const fab = document.getElementById('saveContainer'); if(view === 'add') { fab.classList.remove('opacity-0', 'translate-y-10'); fab.classList.add('opacity-100', 'translate-y-0'); } else { fab.classList.remove('opacity-100', 'translate-y-0'); fab.classList.add('opacity-0', 'translate-y-10'); }
+        }
+        
+        function resetForm() { document.getElementById('productForm').reset(); uploadedMain=""; uploadedGallery=[]; document.getElementById('mainPreview').innerHTML=`<div class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon transition-colors"><i class="fa-solid fa-camera-retro text-2xl mb-1"></i><span class="font-accent text-[9px] font-bold tracking-widest uppercase">Cover</span></div>`; document.getElementById('galleryPreview').innerHTML=""; document.getElementById('draftBadge').classList.add('hidden'); fetchNextId(); isEditing=false; }
+        async function fetchNextId() { try { const res = await fetch(`${API_URL}/api/get-next-id`); const d = await res.json(); document.getElementById('pId').value = d.next_id; } catch{} }
+        function toggleOther(selID, id) { const sel = typeof selID === 'string' ? document.getElementById(selID) : selID; const el = document.getElementById(id); if (sel.value === 'Other') el.classList.remove('hidden'); else el.classList.add('hidden'); }
+        function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0','-translate-y-4'); t.classList.add('opacity-100', '-translate-y-0'); setTimeout(()=>t.classList.remove('opacity-100', '-translate-y-0'), 3000); }
+        function filterProducts() { const q = document.getElementById('searchBox').value.toLowerCase(); renderList(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))); }
+        
+        // Remove error class on input
+        document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', function() { this.classList.remove('input-error'); }));
+    </script>
 </body>
 </html>
