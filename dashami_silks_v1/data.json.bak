@@ -1,1 +1,19 @@
-[]
+[
+    {
+        "id": "DS-104",
+        "name": "ithaan mom",
+        "category": "Silk",
+        "fabric": "Pure Silk",
+        "color": "ghk",
+        "price": "5000",
+        "discount_price": "800",
+        "desc": "bhjlbjk",
+        "stars": 5,
+        "stock": "in_stock",
+        "stock_count": 1,
+        "visible": true,
+        "image": "images/DS-104_draft_main.png",
+        "gallery": [],
+        "timestamp": 1766991034
+    }
+]
