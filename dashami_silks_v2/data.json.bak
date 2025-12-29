@@ -1,0 +1,20 @@
+[
+    {
+        "id": "DS-102",
+        "name": "somthing",
+        "category": "Silk",
+        "fabric": "Pure Silk",
+        "color": "",
+        "price": "",
+        "discount_price": "",
+        "desc": "",
+        "stars": 5,
+        "stock": "in_stock",
+        "stock_count": 1,
+        "image": "images/DS-102_draft_main_accb47fb.png",
+        "gallery": [
+            "images/DS-102_draft_1_3d18247a.png"
+        ],
+        "timestamp": 1766997815
+    }
+]
