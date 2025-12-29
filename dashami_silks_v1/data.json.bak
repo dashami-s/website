@@ -1,40 +1,23 @@
 [
     {
-<<<<<<< HEAD
-        "id": "DS-105",
+        "id": "DS-101",
         "name": "Baby",
         "category": "Silk",
         "fabric": "Pure Silk",
-        "color": "Mine",
-        "price": "5",
-        "discount_price": "50000000000000000",
-        "desc": "Mine I said",
-=======
-        "id": "DS-104",
-        "name": "ithaan mom",
-        "category": "Silk",
-        "fabric": "Pure Silk",
-        "color": "ghk",
-        "price": "5000",
-        "discount_price": "800",
-        "desc": "bhjlbjk",
->>>>>>> 8f9ae08eeeccdeb54181cb7c06c23e890cf1f4d3
+        "color": "mine",
+        "price": "500",
+        "discount_price": "500000000",
+        "desc": "only mine",
         "stars": 5,
         "stock": "in_stock",
         "stock_count": 1,
         "visible": true,
-<<<<<<< HEAD
-        "image": "images/DS-105_main.png",
+        "image": "images/DS-101_draft_main.png",
         "gallery": [
-            "images/DS-105_1.png",
-            "images/DS-105_2.png",
-            "images/DS-105_3.png"
+            "images/DS-101_draft_1.png",
+            "images/DS-101_draft_2.png",
+            "images/DS-101_draft_3.png"
         ],
-        "timestamp": 1766955657
-=======
-        "image": "images/DS-104_draft_main.png",
-        "gallery": [],
-        "timestamp": 1766991034
->>>>>>> 8f9ae08eeeccdeb54181cb7c06c23e890cf1f4d3
+        "timestamp": 1766998538
     }
 ]

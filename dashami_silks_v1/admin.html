@@ -4,11 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Dashami Admin</title>
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Berkshire+Swash&family=Cinzel:wght@500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script>
         tailwind.config = {
             theme: {
@@ -26,23 +28,24 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .loader { width: 20px; height: 20px; border: 2px solid rgba(128,0,0,0.1); border-top: 2px solid #800000; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .input-vintage { background-color: #FFFFFF; border: 1px solid #E6D0C5; border-radius: 4px; transition: all 0.2s ease; font-family: 'Georgia', serif; }
         .input-vintage:focus { border-color: #800000; box-shadow: 0 0 0 1px rgba(128,0,0,0.1); outline: none; }
         .input-error { border-color: #EF4444 !important; background-color: #FEF2F2 !important; }
-        .field-error { color: #EF4444; font-size: 11px; margin-top: 4px; font-weight: bold; }
-        .nav-tab { opacity: 0.6; transition: all 0.3s; } 
-        .nav-tab.active { opacity: 1; color: #800000; border-bottom: 2px solid #800000; }
-        .filter-chip { padding: 4px 12px; border-radius: 20px; border: 1px solid #E6D0C5; font-size: 10px; font-family: 'Cinzel', serif; font-weight: 700; color: #800000; opacity: 0.6; transition: 0.2s; cursor: pointer; }
+        
+        .nav-tab { opacity: 0.6; transition: all 0.3s; } .nav-tab.active { opacity: 1; color: #800000; border-bottom: 2px solid #800000; }
+        
+        .filter-chip { padding: 4px 12px; border-radius: 20px; border: 1px solid #E6D0C5; font-size: 10px; font-family: 'Cinzel', serif; font-weight: 700; color: #800000; opacity: 0.6; transition: 0.2s; }
         .filter-chip.active { background: #800000; color: #fff; opacity: 1; border-color: #800000; }
         .filter-chip.active-draft { background: #F59E0B; color: #fff; opacity: 1; border-color: #F59E0B; }
         .filter-chip.active-trash { background: #DC2626; color: #fff; opacity: 1; border-color: #DC2626; }
+
+        /* Disabled Button Styling */
         button:disabled { cursor: not-allowed; opacity: 0.7; filter: grayscale(100%); }
-        .draft-item { background: white; border: 1px solid #E6D0C5; padding: 8px 12px; border-radius: 6px; font-size: 12px; cursor: pointer; display: inline-block; transition: all 0.2s; }
-        .draft-item:hover { border-color: #800000; background: #FFF5F0; }
-        .draft-item.active { background: #800000; color: white; border-color: #800000; }
     </style>
 </head>
 <body class="pb-32 antialiased">
+
     <header class="fixed top-0 inset-x-0 z-50 bg-[#FFF0E6]/95 backdrop-blur-sm border-b border-[#E6D0C5]">
         <div class="max-w-7xl mx-auto px-4 md:px-8 py-3 flex justify-between items-center">
             <div class="flex items-center gap-3">
@@ -58,12 +61,14 @@
                 </div>
             </div>
             <div class="flex gap-4">
-                <button id="btn-list" onclick="switchView('list')" class="nav-tab active text-xs font-accent font-bold tracking-widest uppercase py-1">Inventory</button>
-                <button id="btn-add" onclick="switchView('add')" class="nav-tab text-xs font-accent font-bold tracking-widest uppercase py-1">Add New</button>
+                <button id="btn-list" onclick="switchView('list')" class="text-xs font-accent font-bold tracking-widest uppercase py-1 border-b-2 border-maroon">Inventory</button>
+                <button id="btn-add" onclick="switchView('add')" class="text-xs font-accent font-bold tracking-widest uppercase py-1 border-b-2 border-transparent opacity-60">Add New</button>
             </div>
         </div>
     </header>
+
     <main class="max-w-7xl mx-auto px-4 md:px-8 pt-24">
+
         <div id="view-list" class="space-y-6">
             <div class="sticky top-[75px] z-40 bg-[#FFF0E6]/95 p-2 -mx-2 rounded-lg backdrop-blur-sm space-y-3">
                 <div class="relative flex-grow shadow-classic rounded-lg">
@@ -82,45 +87,42 @@
                 </div>
             </div>
         </div>
+
         <div id="view-add" class="hidden">
             <div class="flex justify-between items-center mb-4 border-b border-maroon/10 pb-2">
                 <div id="draftBadge" class="hidden flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-maroon/20 shadow-sm">
                     <span class="animate-pulse w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                    <span class="text-[10px] font-accent font-bold tracking-widest text-maroon">Unsaved Changes</span>
+                    <span class="text-[10px] font-accent font-bold tracking-widest text-maroon" id="draftText">Draft Loaded</span>
                 </div>
-                <button id="btnDiscard" onclick="discardDraft()" class="hidden ml-auto text-[10px] font-accent font-bold uppercase tracking-widest text-maroon/60 hover:text-red-600 transition-colors flex items-center gap-2">
+                <button onclick="discardDraft()" class="ml-auto text-[10px] font-accent font-bold uppercase tracking-widest text-maroon/60 hover:text-red-600 transition-colors flex items-center gap-2 group">
                     <span>Discard</span><i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
 
-            <!-- Draft Loading Section -->
-            <div class="mb-6 p-4 bg-white rounded-lg border border-[#E6D0C5] shadow-classic">
-                <div class="flex items-center justify-between mb-3">
-                    <h3 class="font-accent font-bold text-sm text-maroon">📋 Saved Drafts</h3>
-                    <span class="text-[10px] text-maroon/50" id="draftCount">(0)</span>
-                </div>
-                <div id="draftList" class="flex gap-2 flex-wrap">
-                    <div class="text-[11px] text-maroon/40">No saved drafts. Create one below!</div>
-                </div>
-            </div>
-
             <form id="productForm" class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                
                 <div class="lg:col-span-4 space-y-6">
                     <h3 class="font-accent font-bold text-sm text-maroon border-l-2 border-maroon pl-3 uppercase tracking-wider">Visuals <span class="text-red-500">*</span></h3>
+                    
                     <div id="mainImageZone" class="aspect-square relative w-full bg-white border-2 border-dashed border-[#E6D0C5] hover:border-maroon transition-all cursor-pointer group rounded-lg overflow-hidden" onclick="document.getElementById('mainInput').click()">
                         <div id="mainPreview" class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon">
-                            <i class="fa-solid fa-camera-retro text-3xl mb-2"></i><span class="font-accent text-[10px] font-bold tracking-widest uppercase">Cover Image</span>
+                            <i class="fa-solid fa-camera-retro text-3xl mb-2"></i>
+                            <span class="font-accent text-[10px] font-bold tracking-widest uppercase">Cover Image</span>
                         </div>
                         <div id="prog-wrap-main" class="absolute bottom-0 inset-x-0 h-1 bg-gray-100 hidden"><div id="prog-main" class="h-full bg-maroon transition-all duration-300" style="width: 0%"></div></div>
                     </div>
-                    <div id="mainImageError" class="field-error hidden">Main image required</div>
                     <input type="file" id="mainInput" accept="image/*" class="hidden">
+
                     <div class="bg-white p-4 rounded-lg border border-[#E6D0C5]">
-                        <div class="flex items-center justify-between mb-3"><span class="text-xs font-bold text-maroon/70 uppercase">Gallery</span><button type="button" onclick="document.getElementById('galleryInput').click()" class="text-xs text-maroon font-bold hover:underline">+ Add</button></div>
+                        <div class="flex items-center justify-between mb-3">
+                            <span class="text-xs font-bold text-maroon/70 uppercase">Gallery</span>
+                            <button type="button" onclick="document.getElementById('galleryInput').click()" class="text-xs text-maroon font-bold hover:underline">+ Add</button>
+                        </div>
                         <input type="file" id="galleryInput" accept="image/*" multiple class="hidden">
                         <div id="galleryPreview" class="flex gap-2 overflow-x-auto no-scrollbar pb-2 min-h-[50px]"></div>
                     </div>
                 </div>
+
                 <div class="lg:col-span-8 space-y-6">
                     <h3 class="font-accent font-bold text-sm text-maroon border-l-2 border-maroon pl-3 uppercase tracking-wider">Product Info</h3>
                     <div class="bg-white p-6 rounded-lg shadow-classic border border-[#E6D0C5]">
@@ -134,30 +136,45 @@
                             </div>
                             <div class="col-span-9 md:col-span-10">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Title <span class="text-red-500">*</span></label>
-                                <input type="text" id="pName" maxlength="200" oninput="markDirty()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-maroon">
-                                <div id="pName-error" class="field-error hidden">Title required (max 200 chars)</div>
+                                <input type="text" id="pName" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-maroon">
                             </div>
+
                             <div class="col-span-6 md:col-span-4">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Category <span class="text-red-500">*</span></label>
-                                <select id="pCategory" onchange="toggleOther(this, 'catOther'); markDirty()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                <select id="pCategory" onchange="toggleOther(this, 'catOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
                                     <option value="Silk">Silk</option><option value="Cotton">Cotton</option><option value="Banarasi">Banarasi</option><option value="Mysore Silk">Mysore Silk</option><option value="Other">Other</option>
                                 </select>
-                                <input id="catOther" maxlength="100" oninput="markDirty()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
-                                <div id="catOther-error" class="field-error hidden">Category required when Other selected</div>
+                                <input id="catOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
                             </div>
                             <div class="col-span-6 md:col-span-4">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Fabric <span class="text-red-500">*</span></label>
-                                <select id="pFabric" onchange="toggleOther(this, 'fabOther'); markDirty()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                <select id="pFabric" onchange="toggleOther(this, 'fabOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
                                     <option value="Pure Silk">Pure Silk</option><option value="Cotton Mix">Cotton Mix</option><option value="Georgette">Georgette</option><option value="Art Silk">Art Silk</option><option value="Other">Other</option>
                                 </select>
-                                <input id="fabOther" maxlength="100" oninput="markDirty()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
-                                <div id="fabOther-error" class="field-error hidden">Fabric required when Other selected</div>
+                                <input id="fabOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
                             </div>
-                            <div class="col-span-4"><label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Price</label><input type="number" id="pPrice" min="0" step="0.01" oninput="markDirty()" class="input-vintage w-full py-2 px-3 text-sm font-bold"></div>
-                            <div class="col-span-4"><label class="block text-[9px] font-accent font-bold text-red-600 uppercase tracking-wider mb-1">Sale</label><input type="number" id="pDiscPrice" min="0" step="0.01" oninput="markDirty()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-red-700 bg-red-50 border-red-200"></div>
-                            <div class="col-span-4"><label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Qty</label><input type="number" id="pStockCount" value="1" min="0" max="99999" oninput="markDirty()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-center"></div>
-                            <div class="col-span-12 md:col-span-4"><label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Color</label><input type="text" id="pColor" maxlength="100" oninput="markDirty()" class="input-vintage w-full py-2 px-3 text-sm"></div>
-                            <div class="col-span-12"><label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Description</label><textarea id="pDesc" maxlength="5000" oninput="markDirty(); updateDescCount()" class="input-vintage w-full h-24 py-2 px-3 text-sm leading-relaxed"></textarea><div class="text-[9px] text-maroon/50 mt-1"><span id="descCount">0</span>/5000</div></div>
+
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">MRP <span class="text-red-500">*</span></label>
+                                <input type="number" id="pPrice" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-red-600 uppercase tracking-wider mb-1">Sale</label>
+                                <input type="number" id="pDiscPrice" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-red-700 bg-red-50 border-red-200">
+                            </div>
+                            <div class="col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Qty <span class="text-red-500">*</span></label>
+                                <input type="number" id="pStockCount" value="1" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-center">
+                            </div>
+
+                            <div class="col-span-12 md:col-span-4">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Color <span class="text-red-500">*</span></label>
+                                <input type="text" id="pColor" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm">
+                            </div>
+                            <div class="col-span-12">
+                                <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Description <span class="text-red-500">*</span></label>
+                                <textarea id="pDesc" oninput="debounceSave()" class="input-vintage w-full h-24 py-2 px-3 text-sm leading-relaxed"></textarea>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -165,155 +182,88 @@
             <div class="h-24"></div>
         </div>
     </main>
+
     <div id="saveContainer" class="fixed bottom-6 inset-x-0 flex justify-center items-center gap-3 z-50 pointer-events-none opacity-0 translate-y-10 transition-all duration-300">
-        <button id="btnLater" onclick="saveToDrafts()" class="pointer-events-auto bg-amber-500 text-white px-5 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg border border-amber-600 hover:bg-amber-600 flex items-center gap-2 text-xs">
-            <i class="fa-regular fa-save"></i> Save as Draft
+        <button id="btnLater" onclick="saveIncomplete()" class="pointer-events-auto bg-white text-maroon px-5 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg border border-maroon/20 hover:bg-gray-50 flex items-center gap-2 text-xs">
+            <i class="fa-regular fa-clock"></i> Later
         </button>
-        <button id="saveBtn" onclick="saveProduct('live')" class="pointer-events-auto bg-maroon text-white px-8 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg flex items-center gap-2 transition-transform active:scale-95 border border-white/20 hover:bg-maroon/90 text-xs">
-            <i class="fa-solid fa-check"></i> Publish Live
+        <button id="saveBtn" onclick="submitProduct()" class="pointer-events-auto bg-maroon text-white px-8 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg flex items-center gap-2 transition-transform active:scale-95 border border-white/20 hover:bg-maroon/90 text-xs">
+            <i class="fa-solid fa-check"></i> Save Product
         </button>
     </div>
+
     <div id="toast" class="fixed top-20 left-1/2 -translate-x-1/2 bg-maroon text-white px-6 py-3 rounded shadow-xl opacity-0 -translate-y-4 transition-all duration-300 pointer-events-none z-[60] flex items-center gap-3 font-accent text-xs font-bold tracking-wider uppercase border border-white/20">
         <span id="toastMsg">Notification</span>
     </div>
+
     <script>
-        const API_URL = "";
-        const API_KEY = localStorage.getItem('dashami_api_key') || 'dev-key-change-in-production';
+        const API_URL = ""; 
         let allProducts = [], uploadedMain = "", uploadedGallery = [], isEditing = false, currentMode = 'live';
-        let isDirty = false, saveTimeout, uploadQueue = 0, connectionCheckInterval = null;
-        let draftsList = [];  // NEW: Array to store all drafts
+        let saveTimeout;
+        let uploadQueue = 0; // Tracks active uploads
 
-        window.onbeforeunload = function() {
-            if(isDirty) return "You have unsaved changes.";
-        };
-
-        document.addEventListener('keydown', (e) => {
-            if(e.ctrlKey && e.key === 's') { e.preventDefault(); if(isDirty) saveProduct('live'); }
-            if(e.key === 'Escape') { if(isDirty && document.getElementById('view-add').classList.contains('hidden') === false) discardDraft(); }
-        });
-
+        // --- 1. INIT ---
         window.onload = async () => {
             try {
                 updateStatus(false);
-                startConnectionPolling();
+                try { const check = await fetch(API_URL+'/'); if(check.ok) updateStatus(true); } catch(e){}
                 loadInventory();
-                loadDrafts();  // NEW: Load all drafts on startup
+                
                 try {
-                    const res = await fetch(`${API_URL}/api/draft`, {headers: {'X-API-Key': API_KEY}});
+                    const res = await fetch(`${API_URL}/api/draft`);
                     const draft = await res.json();
                     if(Object.keys(draft).length > 0 && (draft.name || draft.mainImage)) {
-                        if(!isEditing) { switchView('add'); restoreDraft(draft); }
+                        if(!isEditing) {
+                            switchView('add');
+                            restoreDraft(draft);
+                        }
                     } else fetchNextId();
                 } catch { fetchNextId(); }
             } catch(e){}
         };
 
-        function startConnectionPolling() {
-            if(connectionCheckInterval) clearInterval(connectionCheckInterval);
-            connectionCheckInterval = setInterval(async () => {
-                try {
-                    const res = await fetch(`${API_URL}/api/check-updates`);
-                    updateStatus(res.ok);
-                } catch { updateStatus(false); }
-            }, 5000);
-        }
-
         function updateStatus(isOnline) {
             const dot = document.getElementById('statusDot'), txt = document.getElementById('statusText');
-            if(isOnline) { 
-                dot.className="w-1.5 h-1.5 rounded-full bg-emerald-500"; 
-                txt.innerText="ONLINE"; 
-                txt.className="text-[9px] font-accent font-bold text-emerald-700 tracking-widest uppercase"; 
-            } else { 
-                dot.className="w-1.5 h-1.5 rounded-full bg-red-500"; 
-                txt.innerText="OFFLINE"; 
-                txt.className="text-[9px] font-accent font-bold text-red-700 tracking-widest uppercase"; 
-            }
+            if(isOnline) { dot.className="w-1.5 h-1.5 rounded-full bg-emerald-500"; txt.innerText="ONLINE"; txt.className="text-[9px] font-accent font-bold text-emerald-700 tracking-widest uppercase"; }
+            else { dot.className="w-1.5 h-1.5 rounded-full bg-red-500"; txt.innerText="OFFLINE"; txt.className="text-[9px] font-accent font-bold text-red-700 tracking-widest uppercase"; }
         }
 
-        // NEW: Load all drafts from unfilled
-        function loadDrafts() {
-            try {
-                fetch(`${API_URL}/api/products?source=unfilled&sort=newest`, {headers: {'X-API-Key': API_KEY}})
-                    .then(r => r.json())
-                    .then(drafts => {
-                        draftsList = drafts;
-                        renderDraftsPanel();
-                    });
-            } catch(e) { console.error(e); }
-        }
-
-        // NEW: Render draft list panel
-        function renderDraftsPanel() {
-            const panel = document.getElementById('draftList');
-            const count = document.getElementById('draftCount');
-            count.textContent = `(${draftsList.length})`;
-            
-            if(draftsList.length === 0) {
-                panel.innerHTML = '<div class="text-[11px] text-maroon/40">No saved drafts. Create one below!</div>';
-                return;
-            }
-            
-            panel.innerHTML = draftsList.map(d => `
-                <div class="draft-item" onclick="loadDraft('${d.id}', this)">
-                    <div class="font-bold text-maroon text-xs">${d.name || 'Untitled'}</div>
-                    <div class="text-[9px] text-maroon/50">${d.id}</div>
-                </div>
-            `).join('');
-        }
-
-        // NEW: Load draft into form
-        function loadDraft(draftId, element) {
-            const draft = draftsList.find(d => d.id === draftId);
-            if(!draft) return;
-            
-            // Highlight selected draft
-            document.querySelectorAll('.draft-item').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            
-            // Load draft into form
-            populateForm(draft);
-            isEditing = true;
-            isDirty = false;
-            document.getElementById('draftBadge').classList.add('hidden');
-            document.getElementById('btnDiscard').classList.add('hidden');
-            showToast("✓ Draft loaded");
-        }
-
+        // --- 2. RELIABLE UPLOAD ---
         function updateButtons() {
-            const btnSave = document.getElementById('saveBtn'), btnLater = document.getElementById('btnLater');
+            const btnSave = document.getElementById('saveBtn');
+            const btnLater = document.getElementById('btnLater');
+            
             if (uploadQueue > 0) {
-                btnSave.disabled = true; btnLater.disabled = true;
+                btnSave.disabled = true;
+                btnLater.disabled = true;
                 btnSave.innerHTML = `<span class="loader w-4 h-4 border-white border-b-transparent"></span> Uploading (${uploadQueue})...`;
             } else {
-                btnSave.disabled = false; btnLater.disabled = false;
-                btnSave.innerHTML = '<i class="fa-solid fa-check"></i> Publish Live';
+                btnSave.disabled = false;
+                btnLater.disabled = false;
+                btnSave.innerHTML = '<i class="fa-solid fa-check"></i> Save Product';
             }
         }
 
-        function validateFileBeforeUpload(file) {
-            const maxSize = 10 * 1024 * 1024;
-            const allowedMimes = ['image/png', 'image/jpeg', 'image/gif', 'image/webp', 'video/mp4', 'video/quicktime', 'video/x-msvideo'];
-            if(file.size > maxSize) { showToast("File too large (max 10MB)"); return false; }
-            if(!allowedMimes.includes(file.type)) { showToast("Invalid file type"); return false; }
-            return true;
-        }
-
-        async function uploadFile(file, progEl, progWrap) {
-            if(!validateFileBeforeUpload(file)) return Promise.reject();
-            uploadQueue++; updateButtons();
+        async function uploadFile(file, progElId, progWrapId) {
+            uploadQueue++;
+            updateButtons();
+            
             return new Promise((resolve, reject) => {
                 const formData = new FormData(); formData.append('file', file);
                 const xhr = new XMLHttpRequest(); xhr.open('POST', `${API_URL}/api/upload`, true);
-                xhr.setRequestHeader('X-API-Key', API_KEY);
-                if(progWrap) document.getElementById(progWrap).classList.remove('hidden');
-                xhr.upload.onprogress = (e) => { if(progEl) document.getElementById(progEl).style.width = ((e.loaded/e.total)*100)+"%"; };
+                if(progWrapId) document.getElementById(progWrapId).classList.remove('hidden');
+                xhr.upload.onprogress = (e) => { if(progElId) document.getElementById(progElId).style.width = ((e.loaded/e.total)*100)+"%"; };
                 xhr.onload = () => {
-                    uploadQueue--; updateButtons();
+                    uploadQueue--;
+                    updateButtons();
                     if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).url); else reject();
-                    if(progWrap) document.getElementById(progWrap).classList.add('hidden');
+                    if(progWrapId) document.getElementById(progWrapId).classList.add('hidden');
                 };
-                xhr.onerror = () => { uploadQueue--; updateButtons(); reject(); };
+                xhr.onerror = () => {
+                    uploadQueue--;
+                    updateButtons();
+                    reject();
+                };
                 xhr.send(formData);
             });
         }
@@ -323,265 +273,102 @@
             const url = URL.createObjectURL(e.target.files[0]);
             document.getElementById('mainPreview').innerHTML = `<img src="${url}" class="w-full h-full object-cover">`;
             document.getElementById('mainImageZone').classList.remove('input-error');
-            document.getElementById('mainImageError').classList.add('hidden');
-            try { uploadedMain = await uploadFile(e.target.files[0], 'prog-main', 'prog-wrap-main'); markDirty(); } 
-            catch { showToast("Upload Failed"); uploadedMain = ""; }
+            try { uploadedMain = await uploadFile(e.target.files[0], 'prog-main', 'prog-wrap-main'); debounceSave(); } catch { showToast("Upload Failed"); }
         });
 
         document.getElementById('galleryInput').addEventListener('change', async (e) => {
             for (const file of Array.from(e.target.files)) {
-                try { const url = await uploadFile(file); uploadedGallery.push(url); renderGallery(); markDirty(); } catch {}
+                try { const url = await uploadFile(file); uploadedGallery.push(url); renderGallery(); debounceSave(); } catch {}
             }
         });
 
         function renderGallery() {
             const grid = document.getElementById('galleryPreview'); grid.innerHTML = "";
             uploadedGallery.forEach((url, i) => {
-                grid.innerHTML += `<div class="relative w-14 h-14 flex-shrink-0 cursor-pointer border border-[#E6D0C5] rounded overflow-hidden hover:border-maroon transition-colors group"><img src="${url}" class="w-full h-full object-cover"><button type="button" onclick="removeGallery(${i})" class="absolute inset-0 bg-maroon/50 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><i class="fa-solid fa-xmark text-xs"></i></button></div>`;
+                grid.innerHTML += `<div class="relative w-14 h-14 flex-shrink-0 cursor-pointer border border-[#E6D0C5] rounded overflow-hidden hover:border-maroon transition-colors group"><img src="${url}" class="w-full h-full object-cover"><button onclick="removeGallery(${i})" class="absolute inset-0 bg-maroon/50 text-white opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity"><i class="fa-solid fa-xmark text-xs"></i></button></div>`;
             });
         }
-        
-        function removeGallery(i) { uploadedGallery.splice(i, 1); renderGallery(); markDirty(); }
+        function removeGallery(i) { uploadedGallery.splice(i, 1); renderGallery(); debounceSave(); }
 
-        function markDirty() {
-            isDirty = true;
-            document.getElementById('draftBadge').classList.remove('hidden');
-            document.getElementById('btnDiscard').classList.remove('hidden');
+        // --- 3. DRAFT ---
+        function debounceSave() { clearTimeout(saveTimeout); saveTimeout = setTimeout(syncDraft, 1000); }
+
+        async function syncDraft() {
+            if(isEditing) return;
+            // Safe getter
+            const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
+            
+            const draft = {
+                name: getVal('pName'),
+                cat: getVal('pCategory'), fab: getVal('pFabric'),
+                price: getVal('pPrice'), disc: getVal('pDiscPrice'),
+                color: getVal('pColor'), stock: getVal('pStockCount'),
+                desc: getVal('pDesc'), mainImage: uploadedMain, gallery: uploadedGallery,
+                catOther: getVal('catOther'), fabOther: getVal('fabOther')
+            };
+            try { await fetch(`${API_URL}/api/draft`, { method: 'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(draft) });
+            document.getElementById('draftBadge').classList.remove('hidden'); } catch{}
         }
 
         function restoreDraft(draft) {
-            populateForm(draft);
-            document.getElementById('draftBadge').classList.remove('hidden');
-            document.getElementById('btnDiscard').classList.remove('hidden');
-            isDirty = true;
+            const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ""; };
+            setVal('pName', draft.name); setVal('pPrice', draft.price); setVal('pDiscPrice', draft.disc);
+            setVal('pColor', draft.color); setVal('pStockCount', draft.stock||1); setVal('pDesc', draft.desc);
+            setVal('catOther', draft.catOther); setVal('fabOther', draft.fabOther);
+
+            setSelectOrOther('pCategory', 'catOther', draft.cat, ['Silk','Cotton','Banarasi','Mysore Silk']);
+            setSelectOrOther('pFabric', 'fabOther', draft.fab, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
+
+            uploadedMain = draft.mainImage||"";
+            if (uploadedMain) document.getElementById('mainPreview').innerHTML = `<img src="${uploadedMain}" class="w-full h-full object-cover">`;
+            uploadedGallery = draft.gallery||[]; renderGallery();
+            
+            toggleOther(document.getElementById('pCategory'), 'catOther'); toggleOther(document.getElementById('pFabric'), 'fabOther');
+            document.getElementById('draftBadge').classList.remove('hidden'); fetchNextId();
         }
 
         async function discardDraft() {
-            if(confirm("Discard all changes?")) {
-                resetForm(); 
-                showToast("Form cleared");
+            if(confirm("Discard?")) {
+                await fetch(`${API_URL}/api/draft`, { method: 'DELETE' });
+                resetForm(); showToast("Draft Cleared");
             }
         }
 
-        // NEW: Save to drafts
-        async function saveToDrafts() {
-            if(!validateForm()) return;
-            
-            const btn = document.getElementById('btnLater'); 
-            const orig = btn.innerHTML;
-            btn.disabled = true; 
-            btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
-
-            const payload = getFormData();
-
-            try {
-                const res = await fetch(`${API_URL}/api/save-incomplete`, { 
-                    method: 'POST', 
-                    headers: {'Content-Type':'application/json', 'X-API-Key': API_KEY}, 
-                    body: JSON.stringify(payload) 
-                });
-                if(res.ok) {
-                    showToast("✓ Saved to drafts! Keep adding more...");
-                    isDirty = false;
-                    document.getElementById('draftBadge').classList.add('hidden');
-                    document.getElementById('btnDiscard').classList.add('hidden');
-                    isEditing = false;
-                    resetForm();
-                    loadDrafts();  // Refresh draft list
-                } else throw new Error(await res.text());
-            } catch(e) { showToast("Error: " + e.message); }
-            btn.disabled = false; 
-            btn.innerHTML = orig;
-        }
-
-        async function saveProduct(targetStatus) {
-            if(targetStatus === 'live') {
-                if(!validateForm()) return;
-            }
-            
-            const btn = document.getElementById('saveBtn'); 
-            const orig = btn.innerHTML;
-            btn.disabled = true; 
-            btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
-
-            const payload = getFormData();
-
-            try {
-                const res = await fetch(`${API_URL}/api/add-product`, { 
-                    method: 'POST', 
-                    headers: {'Content-Type':'application/json', 'X-API-Key': API_KEY}, 
-                    body: JSON.stringify(payload) 
-                });
-                if(res.ok) {
-                    showToast("✓ Published!");
-                    isDirty = false;
-                    document.getElementById('draftBadge').classList.add('hidden');
-                    document.getElementById('btnDiscard').classList.add('hidden');
-                    isEditing = false;
-                    setMode('live');
-                    switchView('list');
-                    resetForm();
-                    loadDrafts();
-                } else throw new Error(await res.text());
-            } catch(e) { showToast("Error: " + e.message); }
-            btn.disabled = false; 
-            btn.innerHTML = orig;
-        }
-
-        async function moveProduct(id, action, source) {
-            if(action === 'trash' && !confirm("Move to Trash?")) return;
-            try {
-                await fetch(`${API_URL}/api/move-product`, { 
-                    method: 'POST', 
-                    headers: {'Content-Type':'application/json', 'X-API-Key': API_KEY}, 
-                    body: JSON.stringify({ id, action, source }) 
-                });
-                loadInventory();
-                loadDrafts();  // Refresh if deleting draft
-                showToast(action === 'trash' ? "Trashed" : "Restored");
-            } catch {}
-        }
-
-        async function permDelete(id) {
-            if(!confirm("DELETE FOREVER? Cannot undo.")) return;
-            await fetch(`${API_URL}/api/perm-delete`, { 
-                method: 'POST', 
-                headers: {'Content-Type':'application/json', 'X-API-Key': API_KEY}, 
-                body: JSON.stringify({id}) 
-            });
-            loadInventory();
-            showToast("Permanently deleted");
-        }
-
-        function getFormData() {
-            let cat = document.getElementById('pCategory').value; if(cat==='Other') cat = document.getElementById('catOther').value || '';
-            let fab = document.getElementById('pFabric').value; if(fab==='Other') fab = document.getElementById('fabOther').value || '';
-            const qty = Math.max(0, parseInt(document.getElementById('pStockCount').value) || 0);
-            return {
-                id: document.getElementById('pId').value, 
-                name: document.getElementById('pName').value,
-                category: cat, 
-                fabric: fab, 
-                price: document.getElementById('pPrice').value, 
-                discount_price: document.getElementById('pDiscPrice').value,
-                color: document.getElementById('pColor').value, 
-                stock: qty > 0 ? 'in_stock' : 'out_of_stock', 
-                stock_count: qty,
-                desc: document.getElementById('pDesc').value, 
-                mainImage: uploadedMain, 
-                gallery: uploadedGallery,
-                stars: 5
-            };
-        }
-
-        function populateForm(data) {
-            const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ""; };
-            setVal('pId', data.id); 
-            setVal('pName', data.name); 
-            setVal('pPrice', data.price); 
-            setVal('pDiscPrice', data.discount_price);
-            setVal('pColor', data.color); 
-            setVal('pStockCount', data.stock_count); 
-            setVal('pDesc', data.desc);
-            
-            setSelectOrOther('pCategory', 'catOther', data.category, ['Silk','Cotton','Banarasi','Mysore Silk']);
-            setSelectOrOther('pFabric', 'fabOther', data.fabric, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
-
-            uploadedMain = data.image || data.mainImage || "";
-            if (uploadedMain) document.getElementById('mainPreview').innerHTML = `<img src="${uploadedMain}" class="w-full h-full object-cover">`;
-            uploadedGallery = data.gallery || [];
-            renderGallery();
-            toggleOther(document.getElementById('pCategory'), 'catOther'); 
-            toggleOther(document.getElementById('pFabric'), 'fabOther');
-            updateDescCount();
-        }
-
-        function validateForm() {
-            let isValid = true;
-            const clearError = (id) => { const el = document.getElementById(id + '-error'); if(el) el.classList.add('hidden'); };
-            const showError = (id) => { const el = document.getElementById(id + '-error'); if(el) el.classList.remove('hidden'); };
-            
-            if(!uploadedMain) { 
-                document.getElementById('mainImageZone').classList.add('input-error'); 
-                document.getElementById('mainImageError').classList.remove('hidden');
-                isValid=false; 
-            } else { 
-                document.getElementById('mainImageZone').classList.remove('input-error');
-                document.getElementById('mainImageError').classList.add('hidden');
-            }
-            
-            if(!document.getElementById('pName').value.trim()) { 
-                document.getElementById('pName').classList.add('input-error'); 
-                showError('pName');
-                isValid=false; 
-            } else { 
-                document.getElementById('pName').classList.remove('input-error'); 
-                clearError('pName');
-            }
-            
-            if(document.getElementById('pCategory').value === 'Other' && !document.getElementById('catOther').value.trim()) {
-                document.getElementById('catOther').classList.add('input-error');
-                showError('catOther');
-                isValid = false;
-            } else {
-                document.getElementById('catOther').classList.remove('input-error');
-                clearError('catOther');
-            }
-            
-            if(document.getElementById('pFabric').value === 'Other' && !document.getElementById('fabOther').value.trim()) {
-                document.getElementById('fabOther').classList.add('input-error');
-                showError('fabOther');
-                isValid = false;
-            } else {
-                document.getElementById('fabOther').classList.remove('input-error');
-                clearError('fabOther');
-            }
-            
-            if(!isValid) showToast("✗ Fill all required fields");
-            return isValid;
-        }
-
+        // --- 4. INVENTORY ---
         async function loadInventory() {
             try {
-                const res = await fetch(`${API_URL}/api/products?source=${currentMode}&sort=newest`, {headers: {'X-API-Key': API_KEY}});
+                const res = await fetch(`${API_URL}/api/products?source=${currentMode}`);
                 allProducts = await res.json();
                 renderList(allProducts);
-            } catch(e) { showToast("Failed to load products"); }
+            } catch { document.getElementById('inventoryList').innerHTML = `<div class="py-24 text-center text-maroon/50"><span class="text-xs font-accent font-bold uppercase tracking-widest">Network Error</span></div>`; }
         }
 
         function renderList(data) {
-            const list = document.getElementById('inventoryList'); 
-            list.innerHTML = "";
-            if(currentMode === 'trash') list.classList.add('opacity-80'); 
-            else list.classList.remove('opacity-80');
-            
-            if(data.length === 0) { 
-                const emptyMsg = currentMode === 'trash' ? 'No trashed items' : (currentMode === 'unfilled' ? 'No draft products' : 'No live products');
-                list.innerHTML = `<div class="col-span-full py-24 text-center text-maroon/50"><span class="block font-brand text-xl mb-2">${emptyMsg}</span><span class="text-xs">Start by adding a new product</span></div>`; 
-                return; 
-            }
+            const list = document.getElementById('inventoryList'); list.innerHTML = "";
+            const box = document.getElementById('inventoryList');
+            if(currentMode === 'trash') { list.classList.add('opacity-80'); } else { list.classList.remove('opacity-80'); }
+            if(data.length === 0) { list.innerHTML = `<div class="col-span-full py-24 text-center text-maroon/50"><span class="block font-brand text-xl mb-2">Empty</span></div>`; return; }
 
             data.forEach(p => {
                 const isStock = p.stock_count > 0;
                 let btns = '';
                 if(currentMode === 'live') {
-                    btns = `<div class="flex gap-2"><button type="button" class="p-1.5 hover:text-maroon transition-colors" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen text-xs"></i></button><button type="button" class="p-1.5 hover:text-red-600 transition-colors" onclick="moveProduct('${p.id}', 'trash', 'live')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
+                    btns = `<div class="flex gap-2"><button class="p-1.5 hover:text-maroon transition-colors" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen text-xs"></i></button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
                 } else if(currentMode === 'unfilled') {
-                    btns = `<div class="flex gap-2"><button type="button" class="text-[10px] font-bold text-amber-600 hover:underline uppercase" onclick="editDraftFromList('${p.id}')">Edit</button><button type="button" class="p-1.5 hover:text-red-600 transition-colors" onclick="moveProduct('${p.id}', 'trash', 'unfilled')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
+                    btns = `<div class="flex gap-2"><button class="text-[10px] font-bold text-amber-600 hover:underline uppercase" onclick="editProduct('${p.id}')">Resume</button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
                 } else if(currentMode === 'trash') {
-                    btns = `<div class="flex flex-col items-end gap-2 border-l border-red-200 pl-2 ml-2"><button type="button" class="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="moveProduct('${p.id}', 'restore', 'trash')">Restore</button><button type="button" class="text-[10px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="permDelete('${p.id}')">Delete</button></div>`;
+                    btns = `<div class="flex flex-col items-end gap-2 border-l border-red-200 pl-2 ml-2"><button class="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="restoreProduct('${p.id}')">Restore</button><button class="text-[10px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="deletePermanent('${p.id}')">Delete Forever</button></div>`;
                 }
 
-                const timeStr = new Date(p.timestamp * 1000).toLocaleDateString();
                 list.innerHTML += `
                     <div class="bg-white p-3 rounded-xl shadow-classic border ${currentMode==='trash'?'border-red-200 bg-red-50/50':'border-[#E6D0C5]'} flex flex-row items-center gap-3 transition-transform hover:-translate-y-1">
-                        <div class="w-14 h-16 bg-gray-100 rounded overflow-hidden flex-shrink-0 border border-maroon/10 relative">
+                        <div class="w-16 h-16 bg-gray-100 rounded-md overflow-hidden flex-shrink-0 border border-maroon/10 relative">
                             <img src="${p.image}" class="w-full h-full object-cover" onerror="this.src='https://placehold.co/100x120?text=No+Img'">
                             ${!isStock && currentMode!=='trash' ? '<div class="absolute inset-0 bg-white/80 flex items-center justify-center"><span class="text-[8px] font-accent font-bold uppercase tracking-widest border border-maroon px-1 py-0.5 text-maroon">Sold Out</span></div>' : ''}
                         </div>
                         <div class="flex-grow min-w-0">
-                            <h3 class="font-bold text-maroon truncate leading-tight">${p.name || 'Untitled'}</h3>
-                            <div class="text-[9px] text-maroon/40">${timeStr}</div>
+                            <h3 class="font-bold text-maroon truncate leading-tight">${p.name || 'Untitled Draft'}</h3>
+                            <div class="text-[10px] text-maroon/50 font-bold uppercase tracking-wide mb-1">${p.id}</div>
                             <div class="flex justify-between items-end">
                                 <span class="font-bold text-sm">₹${p.discount_price||p.price}</span>
                                 ${p.stock_count>0 ? `<span class="text-[9px] bg-[#FFF0E6] text-maroon/70 px-1.5 py-0.5 rounded font-bold">Qty:${p.stock_count}</span>`:''}
@@ -594,106 +381,91 @@
 
         function setMode(mode) {
             currentMode = mode;
-            document.querySelectorAll('.filter-chip').forEach(el => el.className = 'filter-chip');
+            document.querySelectorAll('.filter-chip').forEach(el => { el.classList.remove('active', 'active-draft', 'active-trash'); });
             const activeClass = mode === 'trash' ? 'active-trash' : (mode === 'unfilled' ? 'active-draft' : 'active');
             document.getElementById(`filter-${mode}`).classList.add(activeClass);
-            document.getElementById('searchBox').value = '';
             loadInventory();
         }
 
+        // --- 5. SUBMIT ---
+        async function submitProduct() {
+            // Validation
+            if(uploadQueue > 0) return; // Prevent if uploading
+            let isValid = true;
+            const requiredIds = ['pName', 'pPrice', 'pColor', 'pStockCount', 'pDesc'];
+            if(!uploadedMain) { document.getElementById('mainImageZone').classList.add('input-error'); isValid=false; }
+            else { document.getElementById('mainImageZone').classList.remove('input-error'); }
+            requiredIds.forEach(id => { const el = document.getElementById(id); if(!el.value.trim()) { el.classList.add('input-error'); isValid=false; } else el.classList.remove('input-error'); });
+            const checkDropdown = (selId, inpId) => { const sel = document.getElementById(selId); const inp = document.getElementById(inpId); if(sel.value === 'Other' && !inp.value.trim()) { inp.classList.add('input-error'); isValid=false; } else inp.classList.remove('input-error'); };
+            checkDropdown('pCategory', 'catOther'); checkDropdown('pFabric', 'fabOther');
+            if(!isValid) { showToast("Missing Details!"); return; }
+
+            await postData('/api/add-product', "Product Live!");
+        }
+
+        async function saveIncomplete() { await postData('/api/save-incomplete', "Saved to Drafts"); }
+
+        async function postData(endpoint, msg) {
+            if(uploadQueue > 0) { showToast("Wait for uploads..."); return; }
+            const btn = document.getElementById('saveBtn'); 
+            const orig = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
+            
+            let cat = document.getElementById('pCategory').value; if(cat==='Other') cat = document.getElementById('catOther').value;
+            let fab = document.getElementById('pFabric').value; if(fab==='Other') fab = document.getElementById('fabOther').value;
+            const qty = parseInt(document.getElementById('pStockCount').value)||0;
+
+            const payload = {
+                id: document.getElementById('pId').value, name: document.getElementById('pName').value,
+                category: cat, fabric: fab, price: document.getElementById('pPrice').value, discount_price: document.getElementById('pDiscPrice').value,
+                color: document.getElementById('pColor').value, stock: qty>0?'in_stock':'out_of_stock', stock_count: qty,
+                desc: document.getElementById('pDesc').value, mainImage: uploadedMain, gallery: uploadedGallery
+            };
+
+            try {
+                const res = await fetch(`${API_URL}${endpoint}`, { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(payload) });
+                if(res.ok) {
+                    showToast(msg); localStorage.removeItem('dashami_draft'); isEditing = false;
+                    await fetch(`${API_URL}/api/clear-buffer`, { method: 'POST' });
+                    if(endpoint.includes('save-incomplete')) setMode('unfilled'); else setMode('live');
+                    switchView('list'); resetForm();
+                } else throw new Error();
+            } catch { showToast("Error saving."); }
+            btn.disabled = false; btn.innerHTML = orig;
+        }
+
+        // --- UTILS ---
+        async function deleteProduct(id) { if(!confirm("Trash this item?")) return; await fetch(`${API_URL}/api/delete-product`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Trashed"); }
+        async function restoreProduct(id) { await fetch(`${API_URL}/api/restore-product`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Restored"); }
+        async function deletePermanent(id) { if(!confirm("DELETE FOREVER? Cannot undo.")) return; await fetch(`${API_URL}/api/perm-delete`, {method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({id})}); loadInventory(); showToast("Deleted"); }
+
         function editProduct(id) {
-            const p = allProducts.find(x => x.id === id); 
-            if(!p) return;
-            isEditing = true; 
-            uploadedMain = "";
-            uploadedGallery = [];
-            switchView('add');
-            populateForm(p);
+            const p = allProducts.find(x => x.id === id); if(!p) return;
+            isEditing = true; switchView('add');
+            document.getElementById('pId').value = p.id; document.getElementById('pName').value = p.name;
+            document.getElementById('pPrice').value = p.price; document.getElementById('pDiscPrice').value = p.discount_price;
+            document.getElementById('pColor').value = p.color; document.getElementById('pStockCount').value = p.stock_count;
+            document.getElementById('pDesc').value = p.desc;
+            setSelectOrOther('pCategory', 'catOther', p.category, ['Silk','Cotton','Banarasi','Mysore Silk']);
+            setSelectOrOther('pFabric', 'fabOther', p.fabric, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
+            uploadedMain = p.image; document.getElementById('mainPreview').innerHTML = `<img src="${p.image}" class="w-full h-full object-cover">`;
+            uploadedGallery = p.gallery||[]; renderGallery();
+            document.getElementById('draftBadge').innerHTML = '<span class="text-[10px] font-bold text-maroon">EDITING</span>';
+            document.getElementById('draftBadge').classList.remove('hidden');
         }
 
-        function editDraftFromList(id) {
-            switchView('add');
-            const draft = draftsList.find(d => d.id === id);
-            if(!draft) return;
-            populateForm(draft);
-            isEditing = true;
-        }
-
-        function resetForm() {
-            document.getElementById('productForm').reset(); 
-            uploadedMain = ""; 
-            uploadedGallery = [];
-            document.getElementById('mainPreview').innerHTML = `<div class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon transition-colors"><i class="fa-solid fa-camera-retro text-3xl mb-1"></i><span class="font-accent text-[9px] font-bold tracking-widest uppercase">Cover</span></div>`;
-            document.getElementById('galleryPreview').innerHTML = "";
-            document.getElementById('draftBadge').classList.add('hidden');
-            document.getElementById('btnDiscard').classList.add('hidden');
-            document.querySelectorAll('.field-error').forEach(el => el.classList.add('hidden'));
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            fetchNextId(); 
-            isEditing = false; 
-            isDirty = false;
-        }
-        
-        async function fetchNextId() { 
-            try { 
-                const res = await fetch(`${API_URL}/api/get-next-id`); 
-                const d = await res.json(); 
-                document.getElementById('pId').value = d.next_id; 
-            } catch(e) { console.error(e); } 
-        }
-
+        function setSelectOrOther(sid, iid, val, opts) { if(opts.includes(val)) { document.getElementById(sid).value=val; document.getElementById(iid).classList.add('hidden'); } else { document.getElementById(sid).value='Other'; document.getElementById(iid).value=val; document.getElementById(iid).classList.remove('hidden'); } }
         function switchView(view) {
-            if(isDirty && view !== document.getElementById('view-add').classList.contains('hidden') === false) {
-                if(!confirm("You have unsaved changes. Discard?")) return;
-            }
-            document.getElementById('view-list').classList.toggle('hidden', view !== 'list'); 
-            document.getElementById('view-add').classList.toggle('hidden', view !== 'add');
-            document.getElementById('btn-list').classList.toggle('active', view === 'list'); 
-            document.getElementById('btn-add').classList.toggle('active', view === 'add');
-            const fab = document.getElementById('saveContainer'); 
-            if(view === 'add') { 
-                fab.classList.remove('opacity-0', 'translate-y-10'); 
-                fab.classList.add('opacity-100', 'translate-y-0'); 
-            } else { 
-                fab.classList.remove('opacity-100', 'translate-y-0'); 
-                fab.classList.add('opacity-0', 'translate-y-10'); 
-            }
+            document.getElementById('view-list').classList.toggle('hidden', view !== 'list'); document.getElementById('view-add').classList.toggle('hidden', view !== 'add');
+            document.getElementById('btn-list').classList.toggle('active', view === 'list'); document.getElementById('btn-add').classList.toggle('active', view === 'add');
+            const fab = document.getElementById('saveContainer'); if(view === 'add') { fab.classList.remove('opacity-0', 'translate-y-10'); fab.classList.add('opacity-100', 'translate-y-0'); } else { fab.classList.remove('opacity-100', 'translate-y-0'); fab.classList.add('opacity-0', 'translate-y-10'); }
         }
-
-        function toggleOther(sel, id) { 
-            const el = document.getElementById(id); 
-            if (sel.value === 'Other') el.classList.remove('hidden'); 
-            else el.classList.add('hidden'); 
-        }
-
-        function showToast(msg) { 
-            const t = document.getElementById('toast'); 
-            document.getElementById('toastMsg').innerText = msg; 
-            t.classList.remove('opacity-0', '-translate-y-4'); 
-            t.classList.add('opacity-100', 'translate-y-0'); 
-            setTimeout(() => t.classList.remove('opacity-100', 'translate-y-0'), 3000); 
-        }
-
-        function filterProducts() { 
-            const q = document.getElementById('searchBox').value.toLowerCase(); 
-            renderList(allProducts.filter(p => (p.name || '').toLowerCase().includes(q) || p.id.toLowerCase().includes(q))); 
-        }
-
-        function setSelectOrOther(sid, iid, val, opts) { 
-            if(opts.includes(val)) { 
-                document.getElementById(sid).value = val; 
-                document.getElementById(iid).classList.add('hidden'); 
-            } else { 
-                document.getElementById(sid).value = 'Other'; 
-                document.getElementById(iid).value = val; 
-                document.getElementById(iid).classList.remove('hidden'); 
-            } 
-        }
-
-        function updateDescCount() {
-            const count = (document.getElementById('pDesc').value || '').length;
-            document.getElementById('descCount').textContent = count;
-        }
+        function resetForm() { document.getElementById('productForm').reset(); uploadedMain=""; uploadedGallery=[]; document.getElementById('mainPreview').innerHTML=`<div class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon transition-colors"><i class="fa-solid fa-camera-retro text-2xl mb-1"></i><span class="font-accent text-[9px] font-bold tracking-widest uppercase">Cover</span></div>`; document.getElementById('galleryPreview').innerHTML=""; document.getElementById('draftBadge').classList.add('hidden'); fetchNextId(); }
+        async function fetchNextId() { try { const res = await fetch(`${API_URL}/api/get-next-id`); const d = await res.json(); document.getElementById('pId').value = d.next_id; } catch{} }
+        function toggleOther(selID, id) { const sel = typeof selID === 'string' ? document.getElementById(selID) : selID; const el = document.getElementById(id); if (sel.value === 'Other') el.classList.remove('hidden'); else el.classList.add('hidden'); }
+        function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0','-translate-y-4'); t.classList.add('opacity-100', '-translate-y-0'); setTimeout(()=>t.classList.remove('opacity-100', '-translate-y-0'), 3000); }
+        function filterProducts() { const q = document.getElementById('searchBox').value.toLowerCase(); renderList(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))); }
+        document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', function() { this.classList.remove('input-error'); }));
     </script>
 </body>
 </html>

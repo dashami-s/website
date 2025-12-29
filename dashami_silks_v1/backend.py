@@ -9,8 +9,7 @@ import re
 import socket
 import uuid
 import time
-from functools import wraps
-from datetime import datetime
+from io import BytesIO
 
 # --- 1. AUTO-INSTALLER ---
 def install(package):
@@ -21,13 +20,11 @@ try:
     from flask import Flask, request, jsonify, send_from_directory
     from flask_cors import CORS
     from PIL import Image, ImageOps
-    from werkzeug.utils import secure_filename
 except ImportError:
     try:
         install("flask")
         install("flask-cors")
         install("Pillow")
-        print("[+] Installed! Restarting script...")
         os.execv(sys.executable, ['python'] + sys.argv)
     except Exception as e:
         input(f"Error: {e}")
@@ -35,14 +32,14 @@ except ImportError:
 
 # --- 2. CONFIGURATION ---
 app = Flask(__name__, static_folder='.', static_url_path='')
-CORS(app, resources={r"/*": {"origins": "localhost"}})
-app.config['MAX_CONTENT_LENGTH'] = 50 * 1024 * 1024
+CORS(app, resources={r"/*": {"origins": "*"}})
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024 * 1024 # 1GB Limit
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_FILE = os.path.join(BASE_DIR, 'data.json')
 TRASH_FILE = os.path.join(BASE_DIR, 'trash.json')
+UNFILLED_FILE = os.path.join(BASE_DIR, 'unfilled.json') # <--- NEW
 DRAFT_FILE = os.path.join(BASE_DIR, 'draft.json')
-UNFILLED_FILE = os.path.join(BASE_DIR, 'unfilled.json')
 BACKUP_FILE = os.path.join(BASE_DIR, 'data.json.bak')
 
 IMAGE_DIR = os.path.join(BASE_DIR, 'images')
@@ -50,241 +47,122 @@ BUFFER_DIR = os.path.join(IMAGE_DIR, 'buffer')
 TRASH_IMG_DIR = os.path.join(IMAGE_DIR, 'trash')
 
 PORT = 8000
-ADMIN_API_KEY = os.environ.get('DASHAMI_API_KEY', 'dev-key-change-in-production')
-
-ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif', 'webp', 'mp4', 'mov', 'avi'}
-
-INPUT_LIMITS = {
-    'name': 200,
-    'desc': 5000,
-    'color': 100,
-    'category': 100,
-    'fabric': 100,
-    'price': 999999.99,
-    'discount_price': 999999.99,
-    'stock_count': 99999
-}
 
 for d in [IMAGE_DIR, BUFFER_DIR, TRASH_IMG_DIR]:
-    if not os.path.exists(d): 
-        os.makedirs(d)
+    if not os.path.exists(d): os.makedirs(d)
 
 for f in [DATA_FILE, TRASH_FILE, DRAFT_FILE, UNFILLED_FILE]:
     if not os.path.exists(f):
-        with open(f, 'w') as file: 
-            json.dump([] if f != DRAFT_FILE else {}, file)
+        with open(f, 'w') as file: json.dump([], file)
 
-# --- 3. AUTHENTICATION DECORATOR ---
-def require_auth(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        api_key = request.headers.get('X-API-Key')
-        if api_key != ADMIN_API_KEY:
-            return jsonify({"error": "Unauthorized"}), 401
-        return f(*args, **kwargs)
-    return decorated
-
-# --- 4. VALIDATION HELPERS ---
-def validate_input(field_name, value):
-    if not isinstance(value, str):
-        return False
-    max_len = INPUT_LIMITS.get(field_name, 200)
-    if len(value) > max_len:
-        return False
-    return True
-
-def validate_number(value, max_val=None):
-    try:
-        num = float(value) if value else 0
-        if max_val and num > max_val:
-            return False
-        if num < 0:
-            return False
-        return num
-    except:
-        return False
-
-def validate_stock_status(status):
-    return status in ['in_stock', 'out_of_stock']
-
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-# --- 5. HELPER FUNCTIONS ---
+# --- 3. HELPER FUNCTIONS ---
 def get_local_ip():
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         s.connect(('10.255.255.255', 1))
         IP = s.getsockname()[0]
-    except: 
-        IP = '127.0.0.1'
-    finally: 
-        s.close()
+    except: IP = '127.0.0.1'
+    finally: s.close()
     return IP
 
 def load_json(path, default_type=[]):
-    if not os.path.exists(path): 
-        return default_type
+    if not os.path.exists(path): return default_type
     try:
         with open(path, 'r') as f: 
             content = f.read().strip()
             return json.loads(content) if content else default_type
-    except: 
-        return default_type
+    except: return default_type
 
 def save_json(path, data):
     if path == DATA_FILE and os.path.exists(DATA_FILE):
-        try: 
-            shutil.copyfile(DATA_FILE, BACKUP_FILE)
-        except: 
-            pass
-    with open(path, 'w') as f: 
-        json.dump(data, f, indent=4)
+        try: shutil.copyfile(DATA_FILE, BACKUP_FILE)
+        except: pass
+    with open(path, 'w') as f: json.dump(data, f, indent=4)
 
 def finalize_filename(rel_path, new_base_name):
-    if not rel_path or "buffer" not in rel_path: 
-        return rel_path
+    # Only move if it is in buffer. If already in images/, keep it.
+    if not rel_path or "buffer" not in rel_path: return rel_path
+    
     filename = os.path.basename(rel_path)
     full_src = os.path.join(BUFFER_DIR, filename)
-    if not os.path.exists(full_src): 
-        return rel_path
+    if not os.path.exists(full_src): return rel_path
+    
     ext = os.path.splitext(filename)[1]
-    unique_id = uuid.uuid4().hex[:8]
-    new_name = f"{new_base_name}_{unique_id}{ext}"
+    new_name = new_base_name + ext
     full_dest = os.path.join(IMAGE_DIR, new_name)
-    try:
-        if os.path.exists(full_dest): 
-            os.remove(full_dest)
-        shutil.move(full_src, full_dest)
-        return f"images/{new_name}"
-    except Exception as e:
-        print(f"[!] Image move failed: {e}")
-        return rel_path
+    
+    if os.path.exists(full_dest): os.remove(full_dest)
+    shutil.move(full_src, full_dest)
+    return f"images/{new_name}"
 
 def move_to_trash(rel_path):
-    if not rel_path: 
-        return ""
+    if not rel_path: return ""
     filename = os.path.basename(rel_path)
-    if "buffer" in rel_path: 
-        full_src = os.path.join(BUFFER_DIR, filename)
-    else: 
-        full_src = os.path.join(IMAGE_DIR, filename)
-    if not os.path.exists(full_src): 
-        return rel_path
+    if "buffer" in rel_path: full_src = os.path.join(BUFFER_DIR, filename)
+    else: full_src = os.path.join(IMAGE_DIR, filename)
+    
+    if not os.path.exists(full_src): return rel_path
     full_dest = os.path.join(TRASH_IMG_DIR, filename)
-    try:
-        if os.path.exists(full_dest): 
-            os.remove(full_dest)
-        shutil.move(full_src, full_dest)
-        return f"images/trash/{filename}"
-    except:
-        return rel_path
+    if os.path.exists(full_dest): os.remove(full_dest)
+    shutil.move(full_src, full_dest)
+    return f"images/trash/{filename}"
 
 def move_from_trash(rel_path):
-    if not rel_path: 
-        return ""
+    if not rel_path: return ""
     filename = os.path.basename(rel_path)
     full_src = os.path.join(TRASH_IMG_DIR, filename)
-    if not os.path.exists(full_src): 
-        return rel_path
+    if not os.path.exists(full_src): return rel_path
     full_dest = os.path.join(IMAGE_DIR, filename)
-    try:
-        if os.path.exists(full_dest): 
-            os.remove(full_dest)
-        shutil.move(full_src, full_dest)
-        return f"images/{filename}"
-    except:
-        return rel_path
+    if os.path.exists(full_dest): os.remove(full_dest)
+    shutil.move(full_src, full_dest)
+    return f"images/{filename}"
 
-# --- 6. API ROUTES ---
+# --- 4. API ROUTES ---
 
 @app.route('/')
-def serve_index(): 
-    return send_from_directory('.', 'main.html')
+def serve_index(): return send_from_directory('.', 'main.html')
 
 @app.route('/<path:path>')
-def serve_static(path):
-    if '..' in path or path.startswith('/'):
-        return "Not Found", 404
-    return send_from_directory('.', path)
+def serve_static(path): return send_from_directory('.', path)
 
-@app.route('/api/check-updates', methods=['GET'])
-def check_updates():
-    return jsonify({"status": "ok", "timestamp": int(time.time())}), 200
-
-# --- DRAFT SYSTEM (Single Working Draft) ---
+# --- DRAFT SYNC ---
 @app.route('/api/draft', methods=['GET', 'POST', 'DELETE'])
-@require_auth
 def manage_draft():
-    if request.method == 'GET': 
-        return jsonify(load_json(DRAFT_FILE, {})), 200
-    if request.method == 'POST': 
-        save_json(DRAFT_FILE, request.json)
-        return jsonify({"status": "saved"}), 200
+    if request.method == 'GET': return jsonify(load_json(DRAFT_FILE, {})), 200
+    if request.method == 'POST': save_json(DRAFT_FILE, request.json); return jsonify({"status": "saved"}), 200
     if request.method == 'DELETE':
         save_json(DRAFT_FILE, {})
-        for f in os.listdir(BUFFER_DIR):
-            try: 
-                os.remove(os.path.join(BUFFER_DIR, f))
-            except: 
-                pass
+        # Only clean buffer if explicitly requested, otherwise "Complete Later" might lose files if user clears draft locally
         return jsonify({"status": "cleared"}), 200
 
+# --- UPLOAD ---
 @app.route('/api/upload', methods=['POST'])
-@require_auth
 def upload_file():
     try:
         file = request.files.get('file')
-        if not file: 
-            return jsonify({"error": "No file"}), 400
-        
-        filename = secure_filename(file.filename)
-        if not allowed_file(filename):
-            return jsonify({"error": "File type not allowed"}), 400
-        
-        if file.content_length and file.content_length > 50 * 1024 * 1024:
-            return jsonify({"error": "File too large (max 50MB)"}), 400
-        
-        ext = os.path.splitext(filename)[1].lower()
-        temp_name = f"temp_{int(time.time())}_{uuid.uuid4().hex[:8]}{ext}"
+        if not file: return jsonify({"error": "No file"}), 400
+        ext = os.path.splitext(file.filename)[1].lower() or '.jpg'
+        temp_name = f"temp_{int(time.time())}_{uuid.uuid4().hex[:6]}{ext}"
         save_path = os.path.join(BUFFER_DIR, temp_name)
-        
-        if ext in ['.mp4', '.mov', '.avi']: 
-            file.save(save_path)
+        if ext in ['.mp4', '.mov', '.avi']: file.save(save_path)
         else:
             img = Image.open(file.stream)
             img = ImageOps.exif_transpose(img)
-            if img.mode != 'RGBA': 
-                img = img.convert('RGBA')
+            if img.mode != 'RGBA': img = img.convert('RGBA')
             save_path = save_path.replace(ext, '.png')
             img.save(save_path, 'PNG')
-        
         return jsonify({"status": "success", "url": f"images/buffer/{os.path.basename(save_path)}"}), 200
-    except Exception as e: 
-        return jsonify({"error": str(e)}), 500
+    except Exception as e: return jsonify({"error": str(e)}), 500
 
+# --- SAVE TO UNFILLED (Complete Later) ---
 @app.route('/api/save-incomplete', methods=['POST'])
-@require_auth
 def save_incomplete():
     try:
         data = request.json
-        
-        raw_id = data.get("id", "").strip()
-        if not raw_id or not re.match(r'^[a-zA-Z0-9\-_]+$', raw_id):
-            return jsonify({"error": "Invalid product ID"}), 400
-        
-        if not validate_input('name', data.get("name", "")):
-            return jsonify({"error": "Invalid name (max 200 chars)"}), 400
-        
-        if not validate_input('desc', data.get("desc", "")):
-            return jsonify({"error": "Invalid description (max 5000 chars)"}), 400
-        
-        stock_count = validate_number(data.get("stock_count", 0), INPUT_LIMITS['stock_count'])
-        if stock_count is False:
-            return jsonify({"error": "Invalid stock count"}), 400
-        
+        raw_id = data.get("id")
         safe_id = "".join([c for c in raw_id if c.isalnum() or c in ('-', '_')])
         
+        # Move images to MAIN folder immediately so they are safe
         main_img = finalize_filename(data.get("mainImage"), f"{safe_id}_draft_main")
         gallery = [finalize_filename(p, f"{safe_id}_draft_{i+1}") for i, p in enumerate(data.get("gallery", []))]
 
@@ -298,42 +176,28 @@ def save_incomplete():
             "discount_price": data.get("discount_price"),
             "desc": data.get("desc"),
             "stars": int(data.get("stars", 5)),
-            "stock": data.get("stock", "in_stock"),
-            "stock_count": int(stock_count),
+            "stock": data.get("stock"),
+            "stock_count": int(data.get("stock_count", 0)),
             "image": main_img,
             "gallery": gallery,
             "timestamp": int(time.time())
         }
 
+        # Save to UNFILLED.json
         unfilled_data = load_json(UNFILLED_FILE, [])
         unfilled_data = [p for p in unfilled_data if p['id'] != raw_id]
         unfilled_data.append(product)
         save_json(UNFILLED_FILE, unfilled_data)
         
-        return jsonify({"status": "success", "id": raw_id}), 200
-    except Exception as e: 
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "success"}), 200
+    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
 
+# --- SAVE TO LIVE (Add Product) ---
 @app.route('/api/add-product', methods=['POST'])
-@require_auth
 def add_product():
     try:
         data = request.json
-        
-        raw_id = data.get("id", "").strip()
-        if not raw_id or not re.match(r'^[a-zA-Z0-9\-_]+$', raw_id):
-            return jsonify({"error": "Invalid product ID"}), 400
-        
-        if not validate_input('name', data.get("name", "")):
-            return jsonify({"error": "Invalid name"}), 400
-        
-        if not validate_stock_status(data.get("stock", "in_stock")):
-            return jsonify({"error": "Invalid stock status"}), 400
-        
-        stock_count = validate_number(data.get("stock_count", 0), INPUT_LIMITS['stock_count'])
-        if stock_count is False:
-            return jsonify({"error": "Invalid stock count"}), 400
-        
+        raw_id = data.get("id")
         safe_id = "".join([c for c in raw_id if c.isalnum() or c in ('-', '_')])
         
         main_img = finalize_filename(data.get("mainImage"), f"{safe_id}_main")
@@ -349,83 +213,82 @@ def add_product():
             "discount_price": data.get("discount_price"),
             "desc": data.get("desc"),
             "stars": int(data.get("stars", 5)),
-            "stock": data.get("stock", "in_stock"),
-            "stock_count": int(stock_count),
+            "stock": data.get("stock"),
+            "stock_count": int(data.get("stock_count", 0)),
+            "visible": True,
             "image": main_img,
             "gallery": gallery,
             "timestamp": int(time.time())
         }
 
+        # Save to DATA.json
         current_data = load_json(DATA_FILE, [])
         current_data = [p for p in current_data if p['id'] != raw_id]
         current_data.append(product)
         save_json(DATA_FILE, current_data)
         
+        # Remove from UNFILLED.json if it exists there
         unfilled_data = load_json(UNFILLED_FILE, [])
         unfilled_data = [p for p in unfilled_data if p['id'] != raw_id]
         save_json(UNFILLED_FILE, unfilled_data)
 
-        save_json(DRAFT_FILE, {})
-        return jsonify({"status": "success", "id": raw_id}), 200
-    except Exception as e: 
-        return jsonify({"status": "error", "message": str(e)}), 500
+        # Clear global draft
+        save_json(DRAFT_FILE, {}) 
+        
+        return jsonify({"status": "success"}), 200
+    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
 
-@app.route('/api/move-product', methods=['POST'])
-@require_auth
-def move_product():
+# --- DELETE ---
+@app.route('/api/delete-product', methods=['POST'])
+def delete_product():
     try:
-        data = request.json
-        pid = data.get('id')
-        action = data.get('action')
-        source = data.get('source')
+        pid = request.json.get('id')
+        main_data = load_json(DATA_FILE, [])
+        trash_data = load_json(TRASH_FILE, [])
+        unfilled_data = load_json(UNFILLED_FILE, [])
         
-        if action not in ['trash', 'restore']:
-            return jsonify({"error": "Invalid action"}), 400
+        # Check Main
+        item = next((p for p in main_data if p['id'] == pid), None)
+        source_list = main_data
+        source_file = DATA_FILE
         
-        if action == 'trash':
-            main_data = load_json(DATA_FILE, [])
-            unfilled_data = load_json(UNFILLED_FILE, [])
-            trash_data = load_json(TRASH_FILE, [])
+        # Check Unfilled if not in Main
+        if not item:
+            item = next((p for p in unfilled_data if p['id'] == pid), None)
+            source_list = unfilled_data
+            source_file = UNFILLED_FILE
+
+        if item:
+            if item.get('image'): item['image'] = move_to_trash(item['image'])
+            item['gallery'] = [move_to_trash(g) for g in item.get('gallery', [])]
+            trash_data.append(item)
+            save_json(TRASH_FILE, trash_data)
             
-            item = next((p for p in main_data if p['id'] == pid), None)
-            source_list = main_data
-            source_file = DATA_FILE
-            
-            if not item:
-                item = next((p for p in unfilled_data if p['id'] == pid), None)
-                source_list = unfilled_data
-                source_file = UNFILLED_FILE
-            
-            if item:
-                if item.get('image'): 
-                    item['image'] = move_to_trash(item['image'])
-                item['gallery'] = [move_to_trash(g) for g in item.get('gallery', [])]
-                trash_data.append(item)
-                save_json(TRASH_FILE, trash_data)
-                source_list = [p for p in source_list if p['id'] != pid]
-                save_json(source_file, source_list)
-                return jsonify({"status": "success"}), 200
-            return jsonify({"status": "error", "message": "Not found"}), 404
-        
-        elif action == 'restore':
-            main_data = load_json(DATA_FILE, [])
-            trash_data = load_json(TRASH_FILE, [])
-            item = next((p for p in trash_data if p['id'] == pid), None)
-            if item:
-                if item.get('image'): 
-                    item['image'] = move_from_trash(item['image'])
-                item['gallery'] = [move_from_trash(g) for g in item.get('gallery', [])]
-                main_data.append(item)
-                save_json(DATA_FILE, main_data)
-                trash_data = [p for p in trash_data if p['id'] != pid]
-                save_json(TRASH_FILE, trash_data)
-                return jsonify({"status": "success"}), 200
-            return jsonify({"status": "error"}), 404
-    except Exception as e:
-        return jsonify({"status": "error", "message": str(e)}), 500
+            source_list = [p for p in source_list if p['id'] != pid]
+            save_json(source_file, source_list)
+            return jsonify({"status": "success"}), 200
+        return jsonify({"status": "error", "message": "Not found"}), 404
+    except: return jsonify({"status": "error"}), 500
+
+@app.route('/api/restore-product', methods=['POST'])
+def restore_product():
+    try:
+        pid = request.json.get('id')
+        main_data = load_json(DATA_FILE, [])
+        trash_data = load_json(TRASH_FILE, [])
+        item = next((p for p in trash_data if p['id'] == pid), None)
+        if item:
+            if item.get('image'): item['image'] = move_from_trash(item['image'])
+            item['gallery'] = [move_from_trash(g) for g in item.get('gallery', [])]
+            main_data.append(item)
+            save_json(DATA_FILE, main_data)
+            trash_data = [p for p in trash_data if p['id'] != pid]
+            save_json(TRASH_FILE, trash_data)
+            return jsonify({"status": "success"}), 200
+        return jsonify({"status": "error"}), 404
+    except: return jsonify({"status": "error"}), 500
 
 @app.route('/api/perm-delete', methods=['POST'])
-@require_auth
 def perm_delete():
     try:
         pid = request.json.get('id')
@@ -434,61 +297,42 @@ def perm_delete():
         if item:
             if item.get('image'):
                 full_path = os.path.join(BASE_DIR, item['image'])
-                if os.path.exists(full_path): 
-                    os.remove(full_path)
+                if os.path.exists(full_path): os.remove(full_path)
             for img_path in item.get('gallery', []):
                 full_path = os.path.join(BASE_DIR, img_path)
-                if os.path.exists(full_path): 
-                    os.remove(full_path)
+                if os.path.exists(full_path): os.remove(full_path)
             trash_data = [p for p in trash_data if p['id'] != pid]
             save_json(TRASH_FILE, trash_data)
             return jsonify({"status": "success"}), 200
-        return jsonify({"status": "error", "message": "Not found"}), 404
-    except Exception as e: 
-        return jsonify({"status": "error", "message": str(e)}), 500
+        return jsonify({"status": "error"}), 404
+    except Exception as e: return jsonify({"status": "error", "message": str(e)}), 500
 
 @app.route('/api/clear-buffer', methods=['POST'])
-@require_auth
 def clear_buffer():
     try:
         for f in os.listdir(BUFFER_DIR):
-            try: 
-                os.remove(os.path.join(BUFFER_DIR, f))
-            except: 
-                pass
+            try: os.remove(os.path.join(BUFFER_DIR, f))
+            except: pass
         return jsonify({"status": "success"}), 200
-    except: 
-        return jsonify({"status": "error"}), 500
+    except: return jsonify({"status": "error"}), 500
 
 @app.route('/api/products', methods=['GET'])
-def get_products():
+def get_products(): 
     source = request.args.get('source', 'main')
-    sort_by = request.args.get('sort', 'newest')
-    
-    if source == 'trash': 
-        data = load_json(TRASH_FILE, [])
-    elif source == 'unfilled': 
-        data = load_json(UNFILLED_FILE, [])
-    else: 
-        data = load_json(DATA_FILE, [])
-    
-    if sort_by == 'newest':
-        data = sorted(data, key=lambda x: x.get('timestamp', 0), reverse=True)
-    elif sort_by == 'oldest':
-        data = sorted(data, key=lambda x: x.get('timestamp', 0))
-    
-    return jsonify(data), 200
+    if source == 'trash': return jsonify(load_json(TRASH_FILE, [])), 200
+    if source == 'unfilled': return jsonify(load_json(UNFILLED_FILE, [])), 200 # <--- NEW SOURCE
+    return jsonify(load_json(DATA_FILE, [])), 200
 
 @app.route('/api/get-next-id', methods=['GET'])
 def get_next_id():
+    # Check ALL files to avoid collision
     data = load_json(DATA_FILE, []) + load_json(TRASH_FILE, []) + load_json(UNFILLED_FILE, [])
     max_num = 100
     for item in data:
         match = re.search(r'\d+', str(item.get('id', '')))
         if match:
             num = int(match.group())
-            if num > max_num: 
-                max_num = num
+            if num > max_num: max_num = num
     return jsonify({"next_id": f"DS-{max_num + 1}"}), 200
 
 def open_browser():
@@ -498,10 +342,11 @@ def open_browser():
 if __name__ == '__main__':
     local_ip = get_local_ip()
     print(f"\n{'='*60}")
-    print(f" DASHAMI SERVER v27.1 (MULTI-DRAFT SUPPORT)")
+    print(f" DASHAMI SERVER v25.0 (UNFILLED / COMPLETE LATER)")
     print(f" [PC]    http://localhost:{PORT}/admin.html")
     print(f" [PHONE] http://{local_ip}:{PORT}/admin.html")
-    print(f" API Key: {ADMIN_API_KEY}")
+    print("Waiting for 10 secounds...")
+    time.sleep(10)
     print(f"{'='*60}\n")
-    threading.Thread(target=open_browser, daemon=True).start()
-    app.run(host='0.0.0.0', port=PORT, debug=False)
+    threading.Thread(target=open_browser).start()
+    app.run(host='0.0.0.0', port=PORT, debug=True)
