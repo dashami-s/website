@@ -345,6 +345,8 @@ if __name__ == '__main__':
     print(f" DASHAMI SERVER v25.0 (UNFILLED / COMPLETE LATER)")
     print(f" [PC]    http://localhost:{PORT}/admin.html")
     print(f" [PHONE] http://{local_ip}:{PORT}/admin.html")
+    print("Waiting for 10 secounds...")
+    time.sleep(10)
     print(f"{'='*60}\n")
     threading.Thread(target=open_browser).start()
     app.run(host='0.0.0.0', port=PORT, debug=True)

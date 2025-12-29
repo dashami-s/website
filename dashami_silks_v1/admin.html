@@ -28,14 +28,20 @@
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
         .loader { width: 20px; height: 20px; border: 2px solid rgba(128,0,0,0.1); border-top: 2px solid #800000; border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite; }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        
         .input-vintage { background-color: #FFFFFF; border: 1px solid #E6D0C5; border-radius: 4px; transition: all 0.2s ease; font-family: 'Georgia', serif; }
         .input-vintage:focus { border-color: #800000; box-shadow: 0 0 0 1px rgba(128,0,0,0.1); outline: none; }
         .input-error { border-color: #EF4444 !important; background-color: #FEF2F2 !important; }
+        
+        .nav-tab { opacity: 0.6; transition: all 0.3s; } .nav-tab.active { opacity: 1; color: #800000; border-bottom: 2px solid #800000; }
         
         .filter-chip { padding: 4px 12px; border-radius: 20px; border: 1px solid #E6D0C5; font-size: 10px; font-family: 'Cinzel', serif; font-weight: 700; color: #800000; opacity: 0.6; transition: 0.2s; }
         .filter-chip.active { background: #800000; color: #fff; opacity: 1; border-color: #800000; }
         .filter-chip.active-draft { background: #F59E0B; color: #fff; opacity: 1; border-color: #F59E0B; }
         .filter-chip.active-trash { background: #DC2626; color: #fff; opacity: 1; border-color: #DC2626; }
+
+        /* Disabled Button Styling */
+        button:disabled { cursor: not-allowed; opacity: 0.7; filter: grayscale(100%); }
     </style>
 </head>
 <body class="pb-32 antialiased">
@@ -86,9 +92,9 @@
             <div class="flex justify-between items-center mb-4 border-b border-maroon/10 pb-2">
                 <div id="draftBadge" class="hidden flex items-center gap-2 bg-white px-3 py-1 rounded-full border border-maroon/20 shadow-sm">
                     <span class="animate-pulse w-1.5 h-1.5 rounded-full bg-orange-500"></span>
-                    <span class="text-[10px] font-accent font-bold tracking-widest text-maroon">Restored from Draft</span>
+                    <span class="text-[10px] font-accent font-bold tracking-widest text-maroon" id="draftText">Draft Loaded</span>
                 </div>
-                <button onclick="discardDraft()" class="ml-auto text-[10px] font-accent font-bold uppercase tracking-widest text-maroon/60 hover:text-red-600 transition-colors flex items-center gap-2">
+                <button onclick="discardDraft()" class="ml-auto text-[10px] font-accent font-bold uppercase tracking-widest text-maroon/60 hover:text-red-600 transition-colors flex items-center gap-2 group">
                     <span>Discard</span><i class="fa-solid fa-trash-can"></i>
                 </button>
             </div>
@@ -121,7 +127,6 @@
                     <h3 class="font-accent font-bold text-sm text-maroon border-l-2 border-maroon pl-3 uppercase tracking-wider">Product Info</h3>
                     <div class="bg-white p-6 rounded-lg shadow-classic border border-[#E6D0C5]">
                         <div class="grid grid-cols-12 gap-y-5 gap-x-4">
-                            
                             <div class="col-span-3 md:col-span-2">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">ID</label>
                                 <div class="relative">
@@ -129,7 +134,6 @@
                                     <button type="button" onclick="fetchNextId()" class="absolute right-1 top-1.5 text-maroon hover:text-black"><i class="fa-solid fa-arrows-rotate text-xs"></i></button>
                                 </div>
                             </div>
-                            
                             <div class="col-span-9 md:col-span-10">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Title <span class="text-red-500">*</span></label>
                                 <input type="text" id="pName" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm font-bold text-maroon">
@@ -137,15 +141,14 @@
 
                             <div class="col-span-6 md:col-span-4">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Category <span class="text-red-500">*</span></label>
-                                <select id="pCategory" onchange="toggleOther('pCategory', 'catOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                <select id="pCategory" onchange="toggleOther(this, 'catOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
                                     <option value="Silk">Silk</option><option value="Cotton">Cotton</option><option value="Banarasi">Banarasi</option><option value="Mysore Silk">Mysore Silk</option><option value="Other">Other</option>
                                 </select>
                                 <input id="catOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
                             </div>
-                            
                             <div class="col-span-6 md:col-span-4">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Fabric <span class="text-red-500">*</span></label>
-                                <select id="pFabric" onchange="toggleOther('pFabric', 'fabOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
+                                <select id="pFabric" onchange="toggleOther(this, 'fabOther'); debounceSave()" class="input-vintage w-full py-2 px-3 text-sm text-maroon appearance-none">
                                     <option value="Pure Silk">Pure Silk</option><option value="Cotton Mix">Cotton Mix</option><option value="Georgette">Georgette</option><option value="Art Silk">Art Silk</option><option value="Other">Other</option>
                                 </select>
                                 <input id="fabOther" oninput="debounceSave()" placeholder="Specify..." class="hidden mt-2 input-vintage w-full py-2 px-3 text-xs">
@@ -168,7 +171,6 @@
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Color <span class="text-red-500">*</span></label>
                                 <input type="text" id="pColor" oninput="debounceSave()" class="input-vintage w-full py-2 px-3 text-sm">
                             </div>
-
                             <div class="col-span-12">
                                 <label class="block text-[9px] font-accent font-bold text-maroon/60 uppercase tracking-wider mb-1">Description <span class="text-red-500">*</span></label>
                                 <textarea id="pDesc" oninput="debounceSave()" class="input-vintage w-full h-24 py-2 px-3 text-sm leading-relaxed"></textarea>
@@ -182,7 +184,7 @@
     </main>
 
     <div id="saveContainer" class="fixed bottom-6 inset-x-0 flex justify-center items-center gap-3 z-50 pointer-events-none opacity-0 translate-y-10 transition-all duration-300">
-        <button onclick="saveIncomplete()" class="pointer-events-auto bg-white text-maroon px-5 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg border border-maroon/20 hover:bg-gray-50 flex items-center gap-2 text-xs">
+        <button id="btnLater" onclick="saveIncomplete()" class="pointer-events-auto bg-white text-maroon px-5 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg border border-maroon/20 hover:bg-gray-50 flex items-center gap-2 text-xs">
             <i class="fa-regular fa-clock"></i> Later
         </button>
         <button id="saveBtn" onclick="submitProduct()" class="pointer-events-auto bg-maroon text-white px-8 py-3 rounded-full font-accent font-bold uppercase tracking-widest shadow-lg flex items-center gap-2 transition-transform active:scale-95 border border-white/20 hover:bg-maroon/90 text-xs">
@@ -198,6 +200,7 @@
         const API_URL = ""; 
         let allProducts = [], uploadedMain = "", uploadedGallery = [], isEditing = false, currentMode = 'live';
         let saveTimeout;
+        let uploadQueue = 0; // Tracks active uploads
 
         // --- 1. INIT ---
         window.onload = async () => {
@@ -209,16 +212,12 @@
                 try {
                     const res = await fetch(`${API_URL}/api/draft`);
                     const draft = await res.json();
-                    
-                    // Only restore if draft exists and has content
                     if(Object.keys(draft).length > 0 && (draft.name || draft.mainImage)) {
                         if(!isEditing) {
                             switchView('add');
                             restoreDraft(draft);
                         }
-                    } else {
-                        fetchNextId();
-                    }
+                    } else fetchNextId();
                 } catch { fetchNextId(); }
             } catch(e){}
         };
@@ -229,16 +228,41 @@
             else { dot.className="w-1.5 h-1.5 rounded-full bg-red-500"; txt.innerText="OFFLINE"; txt.className="text-[9px] font-accent font-bold text-red-700 tracking-widest uppercase"; }
         }
 
-        // --- 2. UPLOAD ---
-        async function uploadFile(file, progEl, progWrap) {
+        // --- 2. RELIABLE UPLOAD ---
+        function updateButtons() {
+            const btnSave = document.getElementById('saveBtn');
+            const btnLater = document.getElementById('btnLater');
+            
+            if (uploadQueue > 0) {
+                btnSave.disabled = true;
+                btnLater.disabled = true;
+                btnSave.innerHTML = `<span class="loader w-4 h-4 border-white border-b-transparent"></span> Uploading (${uploadQueue})...`;
+            } else {
+                btnSave.disabled = false;
+                btnLater.disabled = false;
+                btnSave.innerHTML = '<i class="fa-solid fa-check"></i> Save Product';
+            }
+        }
+
+        async function uploadFile(file, progElId, progWrapId) {
+            uploadQueue++;
+            updateButtons();
+            
             return new Promise((resolve, reject) => {
                 const formData = new FormData(); formData.append('file', file);
                 const xhr = new XMLHttpRequest(); xhr.open('POST', `${API_URL}/api/upload`, true);
-                if(progWrap) document.getElementById(progWrap).classList.remove('hidden');
-                xhr.upload.onprogress = (e) => { if(progEl) document.getElementById(progEl).style.width = ((e.loaded/e.total)*100)+"%"; };
+                if(progWrapId) document.getElementById(progWrapId).classList.remove('hidden');
+                xhr.upload.onprogress = (e) => { if(progElId) document.getElementById(progElId).style.width = ((e.loaded/e.total)*100)+"%"; };
                 xhr.onload = () => {
+                    uploadQueue--;
+                    updateButtons();
                     if (xhr.status === 200) resolve(JSON.parse(xhr.responseText).url); else reject();
-                    if(progWrap) document.getElementById(progWrap).classList.add('hidden');
+                    if(progWrapId) document.getElementById(progWrapId).classList.add('hidden');
+                };
+                xhr.onerror = () => {
+                    uploadQueue--;
+                    updateButtons();
+                    reject();
                 };
                 xhr.send(formData);
             });
@@ -271,7 +295,7 @@
 
         async function syncDraft() {
             if(isEditing) return;
-            // Get values safely
+            // Safe getter
             const getVal = (id) => document.getElementById(id) ? document.getElementById(id).value : '';
             
             const draft = {
@@ -287,29 +311,20 @@
         }
 
         function restoreDraft(draft) {
-            if(!draft) return;
-            
-            // Helper to set value
             const setVal = (id, val) => { if(document.getElementById(id)) document.getElementById(id).value = val || ""; };
-            
-            setVal('pName', draft.name);
-            setVal('pPrice', draft.price); setVal('pDiscPrice', draft.disc);
-            setVal('pColor', draft.color); setVal('pStockCount', draft.stock||1);
-            setVal('pDesc', draft.desc);
+            setVal('pName', draft.name); setVal('pPrice', draft.price); setVal('pDiscPrice', draft.disc);
+            setVal('pColor', draft.color); setVal('pStockCount', draft.stock||1); setVal('pDesc', draft.desc);
             setVal('catOther', draft.catOther); setVal('fabOther', draft.fabOther);
 
-            // Handle Dropdowns with Custom Logic
             setSelectOrOther('pCategory', 'catOther', draft.cat, ['Silk','Cotton','Banarasi','Mysore Silk']);
             setSelectOrOther('pFabric', 'fabOther', draft.fab, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
 
             uploadedMain = draft.mainImage||"";
             if (uploadedMain) document.getElementById('mainPreview').innerHTML = `<img src="${uploadedMain}" class="w-full h-full object-cover">`;
+            uploadedGallery = draft.gallery||[]; renderGallery();
             
-            uploadedGallery = draft.gallery||[]; 
-            renderGallery();
-            
-            document.getElementById('draftBadge').classList.remove('hidden');
-            fetchNextId(); // Keep ID fresh
+            toggleOther(document.getElementById('pCategory'), 'catOther'); toggleOther(document.getElementById('pFabric'), 'fabOther');
+            document.getElementById('draftBadge').classList.remove('hidden'); fetchNextId();
         }
 
         async function discardDraft() {
@@ -331,22 +346,18 @@
         function renderList(data) {
             const list = document.getElementById('inventoryList'); list.innerHTML = "";
             const box = document.getElementById('inventoryList');
-            
-            if(currentMode === 'trash') { list.classList.add('opacity-80'); } 
-            else { list.classList.remove('opacity-80'); }
-
+            if(currentMode === 'trash') { list.classList.add('opacity-80'); } else { list.classList.remove('opacity-80'); }
             if(data.length === 0) { list.innerHTML = `<div class="col-span-full py-24 text-center text-maroon/50"><span class="block font-brand text-xl mb-2">Empty</span></div>`; return; }
 
             data.forEach(p => {
                 const isStock = p.stock_count > 0;
                 let btns = '';
-
                 if(currentMode === 'live') {
                     btns = `<div class="flex gap-2"><button class="p-1.5 hover:text-maroon transition-colors" onclick="editProduct('${p.id}')"><i class="fa-solid fa-pen text-xs"></i></button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
                 } else if(currentMode === 'unfilled') {
                     btns = `<div class="flex gap-2"><button class="text-[10px] font-bold text-amber-600 hover:underline uppercase" onclick="editProduct('${p.id}')">Resume</button><button class="p-1.5 hover:text-red-600 transition-colors" onclick="deleteProduct('${p.id}')"><i class="fa-solid fa-trash text-xs"></i></button></div>`;
                 } else if(currentMode === 'trash') {
-                    btns = `<div class="flex flex-col items-end gap-2 border-l border-red-200 pl-2 ml-2"><button class="text-[9px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="restoreProduct('${p.id}')">Restore</button><button class="text-[9px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="deletePermanent('${p.id}')">Delete Forever</button></div>`;
+                    btns = `<div class="flex flex-col items-end gap-2 border-l border-red-200 pl-2 ml-2"><button class="text-[10px] font-bold text-emerald-700 bg-emerald-50 hover:bg-emerald-100 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="restoreProduct('${p.id}')">Restore</button><button class="text-[10px] font-bold text-white bg-red-600 hover:bg-red-700 px-2 py-1 rounded uppercase tracking-wider transition-colors" onclick="deletePermanent('${p.id}')">Delete Forever</button></div>`;
                 }
 
                 list.innerHTML += `
@@ -376,30 +387,17 @@
             loadInventory();
         }
 
-        // --- 5. VALIDATE & SUBMIT ---
+        // --- 5. SUBMIT ---
         async function submitProduct() {
+            // Validation
+            if(uploadQueue > 0) return; // Prevent if uploading
             let isValid = true;
             const requiredIds = ['pName', 'pPrice', 'pColor', 'pStockCount', 'pDesc'];
-            
             if(!uploadedMain) { document.getElementById('mainImageZone').classList.add('input-error'); isValid=false; }
             else { document.getElementById('mainImageZone').classList.remove('input-error'); }
-
-            requiredIds.forEach(id => {
-                const el = document.getElementById(id);
-                if(!el.value.trim()) { el.classList.add('input-error'); isValid=false; }
-                else el.classList.remove('input-error');
-            });
-
-            // Check Dropdowns
-            const checkDropdown = (selId, inpId) => {
-                const sel = document.getElementById(selId);
-                const inp = document.getElementById(inpId);
-                if(sel.value === 'Other' && !inp.value.trim()) { inp.classList.add('input-error'); isValid=false; }
-                else inp.classList.remove('input-error');
-            };
-            checkDropdown('pCategory', 'catOther');
-            checkDropdown('pFabric', 'fabOther');
-
+            requiredIds.forEach(id => { const el = document.getElementById(id); if(!el.value.trim()) { el.classList.add('input-error'); isValid=false; } else el.classList.remove('input-error'); });
+            const checkDropdown = (selId, inpId) => { const sel = document.getElementById(selId); const inp = document.getElementById(inpId); if(sel.value === 'Other' && !inp.value.trim()) { inp.classList.add('input-error'); isValid=false; } else inp.classList.remove('input-error'); };
+            checkDropdown('pCategory', 'catOther'); checkDropdown('pFabric', 'fabOther');
             if(!isValid) { showToast("Missing Details!"); return; }
 
             await postData('/api/add-product', "Product Live!");
@@ -408,7 +406,10 @@
         async function saveIncomplete() { await postData('/api/save-incomplete', "Saved to Drafts"); }
 
         async function postData(endpoint, msg) {
-            const btn = document.getElementById('saveBtn'); btn.disabled = true; btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
+            if(uploadQueue > 0) { showToast("Wait for uploads..."); return; }
+            const btn = document.getElementById('saveBtn'); 
+            const orig = btn.innerHTML;
+            btn.disabled = true; btn.innerHTML = '<span class="loader w-4 h-4 border-white border-b-transparent"></span>';
             
             let cat = document.getElementById('pCategory').value; if(cat==='Other') cat = document.getElementById('catOther').value;
             let fab = document.getElementById('pFabric').value; if(fab==='Other') fab = document.getElementById('fabOther').value;
@@ -426,12 +427,11 @@
                 if(res.ok) {
                     showToast(msg); localStorage.removeItem('dashami_draft'); isEditing = false;
                     await fetch(`${API_URL}/api/clear-buffer`, { method: 'POST' });
-                    // Go to appropriate list
                     if(endpoint.includes('save-incomplete')) setMode('unfilled'); else setMode('live');
                     switchView('list'); resetForm();
                 } else throw new Error();
             } catch { showToast("Error saving."); }
-            btn.disabled = false; btn.innerHTML = '<i class="fa-solid fa-check"></i><span>Save Product</span>';
+            btn.disabled = false; btn.innerHTML = orig;
         }
 
         // --- UTILS ---
@@ -446,38 +446,25 @@
             document.getElementById('pPrice').value = p.price; document.getElementById('pDiscPrice').value = p.discount_price;
             document.getElementById('pColor').value = p.color; document.getElementById('pStockCount').value = p.stock_count;
             document.getElementById('pDesc').value = p.desc;
-            
-            // Logic to select dropdown or show custom input
             setSelectOrOther('pCategory', 'catOther', p.category, ['Silk','Cotton','Banarasi','Mysore Silk']);
             setSelectOrOther('pFabric', 'fabOther', p.fabric, ['Pure Silk','Cotton Mix','Georgette','Art Silk']);
-
             uploadedMain = p.image; document.getElementById('mainPreview').innerHTML = `<img src="${p.image}" class="w-full h-full object-cover">`;
             uploadedGallery = p.gallery||[]; renderGallery();
             document.getElementById('draftBadge').innerHTML = '<span class="text-[10px] font-bold text-maroon">EDITING</span>';
             document.getElementById('draftBadge').classList.remove('hidden');
         }
 
-        function setSelectOrOther(sid, iid, val, opts) {
-            if(opts.includes(val)) { document.getElementById(sid).value=val; document.getElementById(iid).classList.add('hidden'); }
-            else { document.getElementById(sid).value='Other'; document.getElementById(iid).value=val; document.getElementById(iid).classList.remove('hidden'); }
-        }
-
+        function setSelectOrOther(sid, iid, val, opts) { if(opts.includes(val)) { document.getElementById(sid).value=val; document.getElementById(iid).classList.add('hidden'); } else { document.getElementById(sid).value='Other'; document.getElementById(iid).value=val; document.getElementById(iid).classList.remove('hidden'); } }
         function switchView(view) {
             document.getElementById('view-list').classList.toggle('hidden', view !== 'list'); document.getElementById('view-add').classList.toggle('hidden', view !== 'add');
             document.getElementById('btn-list').classList.toggle('active', view === 'list'); document.getElementById('btn-add').classList.toggle('active', view === 'add');
-            document.getElementById('btn-list').classList.toggle('border-b-2', view === 'list'); document.getElementById('btn-add').classList.toggle('border-b-2', view === 'add');
-            document.getElementById('btn-list').classList.toggle('border-maroon', view === 'list'); document.getElementById('btn-add').classList.toggle('border-maroon', view === 'add');
-            
             const fab = document.getElementById('saveContainer'); if(view === 'add') { fab.classList.remove('opacity-0', 'translate-y-10'); fab.classList.add('opacity-100', 'translate-y-0'); } else { fab.classList.remove('opacity-100', 'translate-y-0'); fab.classList.add('opacity-0', 'translate-y-10'); }
         }
-        
-        function resetForm() { document.getElementById('productForm').reset(); uploadedMain=""; uploadedGallery=[]; document.getElementById('mainPreview').innerHTML=`<div class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon transition-colors"><i class="fa-solid fa-camera-retro text-2xl mb-1"></i><span class="font-accent text-[9px] font-bold tracking-widest uppercase">Cover</span></div>`; document.getElementById('galleryPreview').innerHTML=""; document.getElementById('draftBadge').classList.add('hidden'); fetchNextId(); isEditing=false; }
+        function resetForm() { document.getElementById('productForm').reset(); uploadedMain=""; uploadedGallery=[]; document.getElementById('mainPreview').innerHTML=`<div class="w-full h-full flex flex-col items-center justify-center text-maroon/40 group-hover:text-maroon transition-colors"><i class="fa-solid fa-camera-retro text-2xl mb-1"></i><span class="font-accent text-[9px] font-bold tracking-widest uppercase">Cover</span></div>`; document.getElementById('galleryPreview').innerHTML=""; document.getElementById('draftBadge').classList.add('hidden'); fetchNextId(); }
         async function fetchNextId() { try { const res = await fetch(`${API_URL}/api/get-next-id`); const d = await res.json(); document.getElementById('pId').value = d.next_id; } catch{} }
         function toggleOther(selID, id) { const sel = typeof selID === 'string' ? document.getElementById(selID) : selID; const el = document.getElementById(id); if (sel.value === 'Other') el.classList.remove('hidden'); else el.classList.add('hidden'); }
         function showToast(msg) { const t=document.getElementById('toast'); document.getElementById('toastMsg').innerText=msg; t.classList.remove('opacity-0','-translate-y-4'); t.classList.add('opacity-100', '-translate-y-0'); setTimeout(()=>t.classList.remove('opacity-100', '-translate-y-0'), 3000); }
         function filterProducts() { const q = document.getElementById('searchBox').value.toLowerCase(); renderList(allProducts.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q))); }
-        
-        // Remove error class on input
         document.querySelectorAll('input, select, textarea').forEach(el => el.addEventListener('input', function() { this.classList.remove('input-error'); }));
     </script>
 </body>

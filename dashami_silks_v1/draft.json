@@ -1,1 +1,22 @@
-{}
+{
+    "name": "",
+    "cat": "Silk",
+    "fab": "Pure Silk",
+    "price": "",
+    "disc": "",
+    "color": "",
+    "stock": "1",
+    "desc": "",
+    "mainImage": "images/buffer/temp_1766994752_d2cbf5.png",
+    "gallery": [
+        "images/buffer/temp_1766994758_af6acb.png",
+        "images/buffer/temp_1766994758_8e5198.png",
+        "images/buffer/temp_1766994759_617a18.png",
+        "images/buffer/temp_1766994759_694998.png",
+        "images/buffer/temp_1766994759_79ab7e.png",
+        "images/buffer/temp_1766994769_252f46.png",
+        "images/buffer/temp_1766994769_322fac.png"
+    ],
+    "catOther": "",
+    "fabOther": ""
+}

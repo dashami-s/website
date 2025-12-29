@@ -1,1 +1,23 @@
-[]
+[
+    {
+        "id": "DS-105",
+        "name": "Baby",
+        "category": "Silk",
+        "fabric": "Pure Silk",
+        "color": "Mine",
+        "price": "5",
+        "discount_price": "50000000000000000",
+        "desc": "Mine I said",
+        "stars": 5,
+        "stock": "in_stock",
+        "stock_count": 1,
+        "visible": true,
+        "image": "images/DS-105_main.png",
+        "gallery": [
+            "images/DS-105_1.png",
+            "images/DS-105_2.png",
+            "images/DS-105_3.png"
+        ],
+        "timestamp": 1766955657
+    }
+]
