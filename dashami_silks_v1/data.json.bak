@@ -1,23 +1,45 @@
 [
     {
-        "id": "DS-101",
-        "name": "Baby",
+        "id": "DS-102",
+        "name": "Georgette Semi Silk ",
         "category": "Silk",
-        "fabric": "Pure Silk",
-        "color": "mine",
-        "price": "500",
-        "discount_price": "500000000",
-        "desc": "only mine",
+        "fabric": "Georgette",
+        "color": "Cream yellow, Green",
+        "price": "1600",
+        "discount_price": "899",
+        "desc": "Premium Georgette Semi Silk Sarees with elegant and simple Design. Available in two Colours only.",
         "stars": 5,
         "stock": "in_stock",
-        "stock_count": 1,
+        "stock_count": 2,
         "visible": true,
-        "image": "images/DS-101_draft_main.png",
+        "image": "images/DS-102_main.png",
         "gallery": [
-            "images/DS-101_draft_1.png",
-            "images/DS-101_draft_2.png",
-            "images/DS-101_draft_3.png"
+            "images/DS-102_1.png",
+            "images/DS-102_2.png",
+            "images/DS-102_3.png"
         ],
-        "timestamp": 1766998538
+        "timestamp": 1767000027
+    },
+    {
+        "id": "DS-101",
+        "name": "Georgette Semi Silk",
+        "category": "Silk",
+        "fabric": "Georgette",
+        "color": "Bottle Green, Rani Pink, Peacock Green, Light Green",
+        "price": "1600",
+        "discount_price": "899",
+        "desc": "Premium Georgette Semi Silk Sarees with elegant ethnic and simple Design. Available in four different Colours.",
+        "stars": 5,
+        "stock": "in_stock",
+        "stock_count": 4,
+        "visible": true,
+        "image": "images/DS-101_main.png",
+        "gallery": [
+            "images/DS-101_1.png",
+            "images/DS-101_2.png",
+            "images/DS-101_3.png",
+            "images/DS-101_4.png"
+        ],
+        "timestamp": 1767000050
     }
 ]
