@@ -312,7 +312,7 @@ function createProductCard(p) {
         }
     }
     
-    const productUrl = `${window.location.origin}/product.html?id=${p.id}`;
+    const productUrl = `${window.location.origin}/website/dashami_silks_v1/product.html?id=${p.id}`;
     const msg = `Hello Dashami Silk, I am interested in:\n*${safeName}*\nID: ${p.id}\nLink: ${productUrl}`;
     const rawWaLink = `whatsapp://send?phone=${MY_NUMBER}&text=${encodeURIComponent(msg)}`;
     const link = `social_redirect.html?target=${encodeURIComponent(rawWaLink)}&platform=WhatsApp`;
